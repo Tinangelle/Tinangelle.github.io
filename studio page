@@ -1,2 +1,314 @@
-print("Hello, World! This is my studio page.")
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ignis Solaris Studio - Forging worlds from a single spark.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #f75d0b; /* A warm orange/red */
+            --secondary-color: #2c3e50; /* Dark blue/charcoal */
+            --text-color: #ecf0f1; /* Light gray for contrast */
+            --background-color: #1a1a2e; /* Very dark blue for background */
+            --highlight-color: #e67e22; /* Slightly darker orange */
+        }
 
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            line-height: 1;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        .hero {
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(26,26,46,0.8), rgba(26,26,46,0.8)), url('https://via.placeholder.com/1920x1080?text=Ignis+Solaris+Studio+Background') no-repeat center center/cover; /* Placeholder for future background image */
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--highlight-color);
+        }
+
+        section {
+            padding: 80px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        section h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .game-showcase {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .game-card {
+            background-color: var(--secondary-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: left;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .game-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .game-card p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+        
+        .game-card .cta-btn {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+        
+        .game-card .cta-btn:hover {
+            background-color: var(--highlight-color);
+        }
+
+
+        .about-content p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.9rem;
+        }
+
+        footer .social-links a {
+            color: var(--text-color);
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        footer .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        footer p {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            nav ul {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+            nav ul li {
+                margin: 0 10px;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero p {
+                font-size: 1.2rem;
+            }
+            section {
+                padding: 60px 15px;
+            }
+            section h2 {
+                font-size: 2.2rem;
+            }
+            .game-card {
+                padding: 20px;
+            }
+            .game-card h3 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#hero" class="logo">Ignis Solaris Studio</a>
+            <ul>
+                <li><a href="#games">Our Games</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="hero-content">
+                <h1>Forging worlds from a single spark.</h1>
+                <p>Ignis Solaris Studio is an independent game development studio creating immersive and engaging experiences.</p>
+                <a href="#games" class="btn">Discover Our Work</a>
+            </div>
+        </section>
+
+        <section id="games">
+            <h2>Our Games</h2>
+            <div class="game-showcase">
+                <div class="game-card">
+                    <h3>Back to Thawing Valley</h3>
+                    <p><strong>In Development</strong></p>
+                    <p>Rise from the ruins and establish a new order in Back to Thawing Valley, a pixel-art simulation, community-building, and role-playing game.</p>
+                    </div>
+                </div>
+        </section>
+
+        <section id="about">
+            <h2>About Us</h2>
+            <div class="about-content">
+                <p>Ignis Solaris Studio is a solo game development studio based in Toronto, driven by the passion to forge immersive worlds from every tiny spark of inspiration.</p>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>For business inquiries, collaborations, or just to say hello, feel free to reach out!</p>
+            <p>Email: <a href="mailto:jade.x.du@gmail.com" style="color: var(--primary-color); text-decoration: none;">jade.x.du@gmail.com</a></p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer" title="GitHub Profile">GitHub</a>
+            </div>
+        <p>&copy; 2023 Ignis Solaris Studio. All rights reserved.</p>
+    </footer>
+</body>
+</html>

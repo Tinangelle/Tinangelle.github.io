@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devlog #1: Laying the Foundation - Ignis Solaris Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* 这里是你 index.html 的全部原始样式
+          ... (为简洁省略) ... 
+        */
+        @font-face {
+          font-family: 'IgnisFont';
+          src: url('./fonts/LeeeafHei-Regular.woff2') format('woff2'),
+               url('./fonts/LeeeafHei-Regular.woff') format('woff');
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'UranusPixelFont';
+          src: url('./fonts/uranus_pixel_11px-webfont.woff2') format('woff2'),
+                url('./fonts/uranus_pixel_11px-webfont.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+        }
+        :root {
+            --primary-color: #f75d0b;
+            --secondary-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --background-color: #1a1a2e;
+            --highlight-color: #e67e22;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        header {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-family: 'IgnisFont', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            line-height: 1;
+            /* 稍微缩小Logo为切换器腾出空间 */
+            font-size: 2.0rem; 
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center; /* 垂直居中 */
+        }
+        nav ul li {
+            margin-left: 25px;
+        }
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        main {
+            padding-top: 40px;
+        }
+        section {
+            padding: 60px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .devlog-article h1 {
+            font-family: 'IgnisFont', serif;
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .devlog-article .date {
+            display: block;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 40px;
+        }
+        .devlog-article h2 {
+            font-family: 'IgnisFont', serif;
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-top: 40px;
+            margin-bottom: 15px;
+        }
+        .devlog-article p,
+        .devlog-article li {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+        .devlog-article a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .devlog-article a:hover {
+            color: var(--highlight-color);
+            text-decoration: underline;
+        }
+        .devlog-article hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--primary-color), rgba(0, 0, 0, 0));
+            margin: 50px 0;
+        }
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.9rem;
+            margin-top: 60px;
+        }
+        footer .social-links a {
+            color: var(--text-color);
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        footer .social-links a:hover {
+            color: var(--primary-color);
+        }
+        footer p {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+
+        /* --- 新增：语言切换器样式 --- */
+        .lang-switcher {
+            margin-left: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .lang-switcher a {
+            color: var(--text-color);
+            opacity: 0.6;
+            text-decoration: none;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+        .lang-switcher a.active {
+            /* 当前激活的语言 */
+            opacity: 1;
+            color: var(--primary-color);
+            cursor: default;
+        }
+        .lang-switcher a:not(.active):hover {
+            opacity: 1;
+            color: var(--highlight-color);
+        }
+        /* --- 语言切换器样式结束 --- */
+
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo {
+                font-size: 2.2rem; /* 移动端恢复大小 */
+            }
+            nav ul {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+            nav ul li {
+                margin: 0 10px;
+            }
+            /* 移动端切换器位置 */
+            .lang-switcher {
+                position: absolute;
+                top: 1.2rem;
+                right: 20px;
+                margin-left: 0;
+            }
+            .devlog-article h1 {
+                font-size: 2.2rem;
+            }
+            .devlog-article h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">IGNIS SOLARIS STUDIO</a>
+            <ul>
+                <li><a href="index.html#games">Our Games</a></li>
+                <li><a href="index.html#about">About Us</a></li>
+                <li><a href="devlog.html">Devlog</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                
+                <li class="lang-switcher">
+                    <a href="devlog-01-en.html" class="active">EN</a>
+                    <span>/</span>
+                    <a href="devlog-01-zh.html">ZH</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="devlog-article">
+            <h1>Devlog #1: Laying the Foundation</h1>
+            <span class="date">October 18, 2025</span>
+
+            <h2>The Who: About Us</h2>
+            <p>
+                Hello everyone! I’m Jade (but you can also call me 33), the founder of Ignis Solaris Studio. We're a new indie studio based in Toronto, Canada. For now, it’s mostly a solo-dev journey, but I’m incredibly lucky to have the unconditional support of my family and friends.
+            </p>
+            
+            <h2>The What: Our Game</h2>
+            <p>
+                Our first project is <strong>Back to Thawing Valley</strong> (it's a working title for now!).
+            </p>
+            <p>
+                We really want to create a truly <em>cozy</em> game, a kind of psychological sanctuary. It’s a simulation game where we hope you can find a moment of peace and calm. Our goal is to create a space where you can enjoy a quiet life, and build gentle, fulfilling relationships with nature, the animals, and the other townsfolk.
+            </p>
+
+            <h2>The Why: This Devlog</h2>
+            <p>
+                We're launching this devlog to share our journey with you, right from the start. We believe in building transparently and want to keep a public record of our progress (it keeps us honest!).
+            </p>
+            <p>
+                Most of all, we'd love for you to get that "development-rearing" feeling (养成感) – watching the game grow and evolve with us from its very first sparks.
+            </p>
+
+            <h2>This Week's Progress: Building the Hub</h2>
+            <p>
+                Before writing this post, our main focus was on the game itself. We’ve already finished the core Game Design Document and a vertical slice to prove our concept.
+            </p>
+            <p>
+                We’re building it with the <strong>Godot Engine</strong>. We chose Godot because it’s open-source, and there's a really special, non-utilitarian, and beautiful feeling in that.
+            </p>
+            <p>
+                With that groundwork done, we took the next big step: formally registering <strong>Ignis Solaris Studio Inc.</strong> and (finally!) building this official website. From now on, this site will be our central hub for all updates. We're also busy structuring our GitHub repositories.
+            </p>
+
+            <h2>What's Next?</h2>
+            <p>
+                Our goal for the next two weeks is to dive deep into player customization. We'll be focusing on building the initial character creation system—specifically implementing color palette swaps and the framework for changing outfits. Alongside that, we'll continue to refine the game's main map.
+            </p>
+
+            <hr>
+
+            <h2>Join the Journey</h2>
+            <p>
+                Thank you for reading our very first post! We welcome all feedback and suggestions. You can follow our technical progress on GitHub or join our community on Discord to chat.
+            </p>
+            <p>
+                And if you’re a fellow indie developer just starting out (like me), please don’t hesitate to reach out. Let’s share our experiences!
+            </p>
+            <ul>
+                <li><strong>GitHub:</strong> <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer">github.com/Tinangelle</a></li>
+                <li><strong>Discord:</strong> <a href="https://discord.gg/XVpjXMXQ6Y" target="_blank" rel="noopener noreferrer">https://discord.gg/XVpjXMXQ6Y</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer" title="GitHub Profile">GitHub</a>
+        </div>
+        <p>&copy; 2025 Ignis Solaris Studio. All rights reserved.</p>
+    </footer>
+</body>
+</html>

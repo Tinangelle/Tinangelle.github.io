@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ignis Solaris Studio - 星星之火，锻造大千世界。</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* 你所有的原始CSS样式... */
+        @font-face {
+          font-family: 'IgnisFont';
+          src: url('./fonts/LeeeafHei-Regular.woff2') format('woff2'),
+               url('./fonts/LeeeafHei-Regular.woff') format('woff');
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'UranusPixelFont';
+          src: url('./fonts/uranus_pixel_11px-webfont.woff2') format('woff2'),
+                url('./fonts/uranus_pixel_11px-webfont.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+        }
+        :root {
+            --primary-color: #f75d0b;
+            --secondary-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --background-color: #1a1a2e;
+            --highlight-color: #e67e22;
+        }
+        body {
+            /* 添加中文备用字体 */
+            font-family: 'Montserrat', "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+            line-height: 1.8; /* 调整中文行高 */
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
+        header {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-family: 'IgnisFont', serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            line-height: 1;
+            font-size: 2.0rem;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+        nav ul li {
+            margin-left: 25px;
+        }
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        .hero {
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(26,26,46,0.8), rgba(26,26,46,0.8)), url('https://via.placeholder.com/1920x1080?text=Ignis+Solaris+Studio+Background') no-repeat center center/cover;
+            position: relative;
+        }
+        .hero-content { max-width: 800px; padding: 20px; }
+        .hero h1 {
+            font-family: 'IgnisFont', serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover { background-color: var(--highlight-color); }
+        section {
+            padding: 80px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        section h2 {
+            font-family: 'IgnisFont', serif;
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        section h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        .game-showcase {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+        .game-card {
+            background-color: var(--secondary-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: left;
+            width: 100%;
+            max-width: 700px;
+        }
+        .game-card h3 {
+            font-family: 'UranusPixelFont', serif;
+            font-smoothing: none;
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .game-card p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+        .game-card .cta-btn {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+        .game-card .cta-btn:hover { background-color: var(--highlight-color); }
+        .about-content p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.9rem;
+        }
+        footer .social-links a {
+            color: var(--text-color);
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        footer .social-links a:hover { color: var(--primary-color); }
+        footer p { margin-top: 20px; margin-bottom: 0; }
+        
+        /* --- 语言切换器样式 --- */
+        .lang-switcher {
+            margin-left: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .lang-switcher a {
+            color: var(--text-color);
+            opacity: 0.6;
+            text-decoration: none;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+        .lang-switcher a.active {
+            opacity: 1;
+            color: var(--primary-color);
+            cursor: default;
+        }
+        .lang-switcher a:not(.active):hover {
+            opacity: 1;
+            color: var(--highlight-color);
+        }
+        /* --- 语言切换器样式结束 --- */
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo { font-size: 2.2rem; }
+            nav ul {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+            nav ul li { margin: 0 10px; }
+            .lang-switcher {
+                position: absolute;
+                top: 1.2rem;
+                right: 20px;
+                margin-left: 0;
+            }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.2rem; }
+            section { padding: 60px 15px; }
+            section h2 { font-size: 2.2rem; }
+            .game-card { padding: 20px; }
+            .game-card h3 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index-zh.html" class="logo">IGNIS SOLARIS STUDIO</a>
+            <ul>
+                <li><a href="index-zh.html#games">我们的游戏</a></li>
+                <li><a href="index-zh.html#about">关于我们</a></li>
+                <li><a href="devlog-zh.html">开发日志</a></li>
+                <li><a href="index-zh.html#contact">联系我们</a></li>
+                <li class="lang-switcher">
+                    <a href="index-en.html">EN</a>
+                    <span>/</span>
+                    <a href="index-zh.html" class="active">ZH</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="hero-content">
+                <h1>星星之火，锻造大千世界。</h1>
+                <p>Ignis Solaris Studio 是一家独立游戏开发工作室，致力于创造沉浸式和引人入G胜的体验。</p>
+                <a href="#games" class="btn">探索我们的作品</a>
+            </div>
+        </section>
+
+        <section id="games">
+            <h2>我们的游戏</h2>
+            <div class="game-showcase">
+                <div class="game-card">
+                    <h3>Back to Thawing Valley</h3>
+                    <p><strong>开发中</strong></p>
+                    <p>一款舒适温馨的像素艺术模拟游戏。在这里，你可以找到平静，建立社区，并与自然和镇民享受温和愉快的关系。</p>
+                    <a href="devlog-zh.html" class="cta-btn" style="margin-top: 15px;">关注开发进度</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <h2>关于我们</h2>
+            <div class="about-content">
+                <p>Ignis Solaris Studio 是一家位于多伦多的一个人的游戏开发工作室。虽然是独自一人的旅程，但背后有着来自家人和朋友的无私鼓励与帮助。我们怀抱着激情，致力于将每个不起眼的灵感火花，锻造成无数精彩的世界。</p>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>联系我们</h2>
+            <p>无论是商务洽谈、项目合作，或者只是想打个招呼，都欢迎随时联系我们！</p>
+            <p>电子邮箱: <a href="mailto:jade.x.du@gmail.com" style="color: var(--primary-color); text-decoration: none;">jade.x.du@gmail.com</a></p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer" title="GitHub Profile">GitHub</a>
+        </div>
+        <p>&copy; 2025 Ignis Solaris Studio. 保留所有权利。</p>
+    </footer>
+</body>
+</html>

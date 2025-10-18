@@ -6,9 +6,7 @@
     <title>Devlog #1: Laying the Foundation - Ignis Solaris Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* 这里是你 index.html 的全部原始样式
-          ... (为简洁省略) ... 
-        */
+        /* 你所有的原始CSS样式... */
         @font-face {
           font-family: 'IgnisFont';
           src: url('./fonts/LeeeafHei-Regular.woff2') format('woff2'),
@@ -57,12 +55,10 @@
         }
         .logo {
             font-family: 'IgnisFont', serif;
-            font-size: 2.2rem;
             font-weight: 700;
             color: var(--primary-color);
             text-decoration: none;
             line-height: 1;
-            /* 稍微缩小Logo为切换器腾出空间 */
             font-size: 2.0rem; 
         }
         nav ul {
@@ -70,7 +66,7 @@
             margin: 0;
             padding: 0;
             display: flex;
-            align-items: center; /* 垂直居中 */
+            align-items: center; 
         }
         nav ul li {
             margin-left: 25px;
@@ -91,7 +87,7 @@
             padding: 60px 20px;
             max-width: 900px;
             margin: 0 auto;
-            text-align: left;
+            text-align: left; 
         }
         .devlog-article h1 {
             font-family: 'IgnisFont', serif;
@@ -159,7 +155,7 @@
             margin-bottom: 0;
         }
 
-        /* --- 新增：语言切换器样式 --- */
+        /* --- 语言切换器样式 --- */
         .lang-switcher {
             margin-left: 30px;
             font-size: 0.9rem;
@@ -173,7 +169,6 @@
             transition: all 0.3s ease;
         }
         .lang-switcher a.active {
-            /* 当前激活的语言 */
             opacity: 1;
             color: var(--primary-color);
             cursor: default;
@@ -184,15 +179,12 @@
         }
         /* --- 语言切换器样式结束 --- */
 
-
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .logo {
-                font-size: 2.2rem; /* 移动端恢复大小 */
-            }
+            .logo { font-size: 2.2rem; }
             nav ul {
                 margin-top: 15px;
                 width: 100%;
@@ -201,7 +193,6 @@
             nav ul li {
                 margin: 0 10px;
             }
-            /* 移动端切换器位置 */
             .lang-switcher {
                 position: absolute;
                 top: 1.2rem;
@@ -220,13 +211,12 @@
 <body>
     <header>
         <nav>
-            <a href="index.html" class="logo">IGNIS SOLARIS STUDIO</a>
+            <a href="index-en.html" class="logo">IGNIS SOLARIS STUDIO</a>
             <ul>
-                <li><a href="index.html#games">Our Games</a></li>
-                <li><a href="index.html#about">About Us</a></li>
-                <li><a href="devlog.html">Devlog</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-                
+                <li><a href="index-en.html#games">Our Games</a></li>
+                <li><a href="index-en.html#about">About Us</a></li>
+                <li><a href="devlog-en.html">Devlog</a></li>
+                <li><a href="index-en.html#contact">Contact</a></li>
                 <li class="lang-switcher">
                     <a href="devlog-01-en.html" class="active">EN</a>
                     <span>/</span>
@@ -240,12 +230,10 @@
         <section class="devlog-article">
             <h1>Devlog #1: Laying the Foundation</h1>
             <span class="date">October 18, 2025</span>
-
             <h2>The Who: About Us</h2>
             <p>
                 Hello everyone! I’m Jade (but you can also call me 33), the founder of Ignis Solaris Studio. We're a new indie studio based in Toronto, Canada. For now, it’s mostly a solo-dev journey, but I’m incredibly lucky to have the unconditional support of my family and friends.
             </p>
-            
             <h2>The What: Our Game</h2>
             <p>
                 Our first project is <strong>Back to Thawing Valley</strong> (it's a working title for now!).
@@ -253,7 +241,6 @@
             <p>
                 We really want to create a truly <em>cozy</em> game, a kind of psychological sanctuary. It’s a simulation game where we hope you can find a moment of peace and calm. Our goal is to create a space where you can enjoy a quiet life, and build gentle, fulfilling relationships with nature, the animals, and the other townsfolk.
             </p>
-
             <h2>The Why: This Devlog</h2>
             <p>
                 We're launching this devlog to share our journey with you, right from the start. We believe in building transparently and want to keep a public record of our progress (it keeps us honest!).
@@ -261,7 +248,6 @@
             <p>
                 Most of all, we'd love for you to get that "development-rearing" feeling (养成感) – watching the game grow and evolve with us from its very first sparks.
             </p>
-
             <h2>This Week's Progress: Building the Hub</h2>
             <p>
                 Before writing this post, our main focus was on the game itself. We’ve already finished the core Game Design Document and a vertical slice to prove our concept.
@@ -272,14 +258,11 @@
             <p>
                 With that groundwork done, we took the next big step: formally registering <strong>Ignis Solaris Studio Inc.</strong> and (finally!) building this official website. From now on, this site will be our central hub for all updates. We're also busy structuring our GitHub repositories.
             </p>
-
             <h2>What's Next?</h2>
             <p>
                 Our goal for the next two weeks is to dive deep into player customization. We'll be focusing on building the initial character creation system—specifically implementing color palette swaps and the framework for changing outfits. Alongside that, we'll continue to refine the game's main map.
             </p>
-
             <hr>
-
             <h2>Join the Journey</h2>
             <p>
                 Thank you for reading our very first post! We welcome all feedback and suggestions. You can follow our technical progress on GitHub or join our community on Discord to chat.

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devlog - Ignis Solaris Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+          font-family: 'IgnisFont';
+          src: url('./fonts/LeeeafHei-Regular.woff2') format('woff2'),
+               url('./fonts/LeeeafHei-Regular.woff') format('woff');
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'UranusPixelFont';
+          src: url('./fonts/uranus_pixel_11px-webfont.woff2') format('woff2'),
+                url('./fonts/uranus_pixel_11px-webfont.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+        }
+        :root {
+            --primary-color: #f75d0b;
+            --secondary-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --background-color: #1a1a2e;
+            --highlight-color: #e67e22;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        header {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* LOGO 链接改为主页 index.html */
+        .logo {
+            font-family: 'IgnisFont', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            line-height: 1;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 25px;
+        }
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* 主要内容区域 */
+        main {
+            padding-top: 40px; /* 在 header 下方留出一些空间 */
+        }
+        
+        section {
+            padding: 60px 20px;
+            max-width: 900px; /* 可以比主页稍宽，方便阅读 */
+            margin: 0 auto;
+            text-align: left; /* 日志列表和内容适合左对齐 */
+        }
+        section h2 {
+            font-family: 'IgnisFont', serif;
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 10px;
+            text-align: center; /* 大标题居中 */
+        }
+        section h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        
+        /* 日志条目样式 */
+        .log-entry {
+            background-color: var(--secondary-color);
+            padding: 25px 30px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        .log-entry:hover {
+            transform: translateY(-5px);
+        }
+        .log-entry h3 {
+            font-family: 'IgnisFont', serif;
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .log-entry h3 a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .log-entry h3 a:hover {
+            color: var(--highlight-color);
+        }
+        .log-entry .date {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .log-entry p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 0;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.9rem;
+            margin-top: 60px; /* 和顶部 main 的 padding 呼应 */
+        }
+        footer .social-links a {
+            color: var(--text-color);
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        footer .social-links a:hover {
+            color: var(--primary-color);
+        }
+        footer p {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            nav ul {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+            nav ul li {
+                margin: 0 10px;
+            }
+            section {
+                padding: 40px 15px;
+            }
+            section h2 {
+                font-size: 2.2rem;
+            }
+            .log-entry h3 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">IGNIS SOLARIS STUDIO</a>
+            <ul>
+                <li><a href="index.html#games">Our Games</a></li>
+                <li><a href="index.html#about">About Us</a></li>
+                <li><a href="devlog.html">Devlog</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="devlog-list">
+            <h2>Development Log</h2>
+            
+            <article class="log-entry">
+                <p style="text-align: center; font-size: 1.2rem;">Our development log is coming soon. Stay tuned!</p>
+            </article>
+
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer" title="GitHub Profile">GitHub</a>
+        </div>
+        <p>&copy; 2025 Ignis Solaris Studio. All rights reserved.</p>
+    </footer>
+</body>
+</html>

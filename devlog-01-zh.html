@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开发日志 #1：奠定基石 - Ignis Solaris Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* 这里是你 index.html 的全部原始样式
+          ... (为简洁省略) ... 
+        */
+        @font-face {
+          font-family: 'IgnisFont';
+          src: url('./fonts/LeeeafHei-Regular.woff2') format('woff2'),
+               url('./fonts/LeeeafHei-Regular.woff') format('woff');
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'UranusPixelFont';
+          src: url('./fonts/uranus_pixel_11px-webfont.woff2') format('woff2'),
+                url('./fonts/uranus_pixel_11px-webfont.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+        }
+        :root {
+            --primary-color: #f75d0b;
+            --secondary-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --background-color: #1a1a2e;
+            --highlight-color: #e67e22;
+        }
+        body {
+            /* 为中文版指定更合适的中文字体备选 */
+            font-family: 'Montserrat', "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+            line-height: 1.8; /* 中文行高稍大更易读 */
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        header {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-family: 'IgnisFont', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            line-height: 1;
+            font-size: 2.0rem; 
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center; 
+        }
+        nav ul li {
+            margin-left: 25px;
+        }
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        main {
+            padding-top: 40px;
+        }
+        section {
+            padding: 60px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .devlog-article h1 {
+            font-family: 'IgnisFont', serif;
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .devlog-article .date {
+            display: block;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 40px;
+        }
+        .devlog-article h2 {
+            font-family: 'IgnisFont', serif;
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-top: 40px;
+            margin-bottom: 15px;
+        }
+        .devlog-article p,
+        .devlog-article li {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+        .devlog-article a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .devlog-article a:hover {
+            color: var(--highlight-color);
+            text-decoration: underline;
+        }
+        .devlog-article hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--primary-color), rgba(0, 0, 0, 0));
+            margin: 50px 0;
+        }
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.9rem;
+            margin-top: 60px;
+        }
+        footer .social-links a {
+            color: var(--text-color);
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        footer .social-links a:hover {
+            color: var(--primary-color);
+        }
+        footer p {
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+
+        /* --- 新增：语言切换器样式 --- */
+        .lang-switcher {
+            margin-left: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .lang-switcher a {
+            color: var(--text-color);
+            opacity: 0.6;
+            text-decoration: none;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+        .lang-switcher a.active {
+            /* 当前激活的语言 */
+            opacity: 1;
+            color: var(--primary-color);
+            cursor: default;
+        }
+        .lang-switcher a:not(.active):hover {
+            opacity: 1;
+            color: var(--highlight-color);
+        }
+        /* --- 语言切换器样式结束 --- */
+
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo {
+                font-size: 2.2rem; 
+            }
+            nav ul {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+            nav ul li {
+                margin: 0 10px;
+            }
+            .lang-switcher {
+                position: absolute;
+                top: 1.2rem;
+                right: 20px;
+                margin-left: 0;
+            }
+            .devlog-article h1 {
+                font-size: 2.2rem;
+            }
+            .devlog-article h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">IGNIS SOLARIS STUDIO</a>
+            <ul>
+                <li><a href="index.html#games">Our Games</a></li>
+                <li><a href="index.html#about">About Us</a></li>
+                <li><a href="devlog.html">Devlog</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                
+                <li class="lang-switcher">
+                    <a href="devlog-01-en.html">EN</a>
+                    <span>/</span>
+                    <a href="devlog-01-zh.html" class="active">ZH</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="devlog-article">
+            <h1>开发日志 #1：奠定基石</h1>
+            <span class="date">2025年10月18日</span>
+
+            <h2>关于我们</h2>
+            <p>
+                大家好！我是Jade，你也可以叫我 33。我是 Ignis Solaris Studio 的创始人。我们是一家坐标在加拿大多伦多的新独立游戏工作室。虽然目前主要是我一个人在开发，但我非常幸运地拥有家人和朋友的无条件支持。
+            </p>
+
+            <h2>关于游戏</h2>
+            <p>
+                我们的第一个项目是《Back to Thawing Valley》（目前还是代号！）。
+            </p>
+            <p>
+                我们真心想做一个真正舒适温馨的游戏，一个可以让人放松的心理庇护所。这是一款模拟经营游戏，我们希望你能在这里找到片刻的平静和安宁。我们的目标是创造一个空间，让你能享受清净的生活，与自然、小动物、还有小镇的居民们建立温和、愉快的关系。
+            </p>
+
+            <h2>关于开发日志</h2>
+            <p>
+                我们启动这个开发日志，是想从一开始就和大家分享这段旅程。我们希望能透明地进行开发，也为自己的工作留个痕（这对我们自己也是一种督促！）。
+            </p>
+            <p>
+                最重要的是，我们希望能给大家带来一种“养成感”——看着这个游戏从最初的火花开始，和我们一起成长。
+            </p>
+
+            <h2>本期进展：搭建大本营</h2>
+            <p>
+                在写这篇文章之前，我们的主要精力都放在游戏本身。目前，我们已经完成了核心的“游戏设计文档”和一个“垂直切片”来验证我们的核心玩法。
+            </p>
+            <p>
+                我们选择用 <strong>Godot 引擎</strong>来开发。选择它，是因为它“开源”。“开源”本身就有一种非常美好、无私、不那么功利的感觉。
+            </p>
+            <p>
+                完成了这些基础工作后，我们迈出了下一步：正式注册了 <strong>Ignis Solaris Studio Inc.</strong> 这家公司，并且（终于！）搭建了这个官方网站。从今天起，这里就是我们所有更新的“大本营”。我们也在忙着整理我们的 GitHub 仓库，让它更清晰。
+            </p>
+
+            <h2>下一步？</h2>
+            <p>
+                我们接下来两周的目标，是深入研究玩家自定义功能。我们会专注于搭建初始的角色创建系统——特别是实现调色板换装，以及为未来的服装系统打好框架。与此同时，我们也会继续完善游戏的主地图。
+            </p>
+
+            <hr>
+
+            <h2>加入我们</h2>
+            <p>
+                感谢你阅读我们的第一篇日志！我们欢迎所有的意见和建议。你可以在 GitHub 上关注我们的技术进展，或者加入我们的 Discord 服务器一起来聊天。
+            </p>
+            <p>
+                如果你（和我一样）也是一个刚刚起步的独立开发者，请一定不要犹豫，非常欢迎我们一起交流经验！
+            </p>
+            <ul>
+                <li><strong>GitHub:</strong> <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer">github.com/Tinangelle</a></li>
+                <li><strong>Discord:</strong> <a href="https://discord.gg/XVpjXMXQ6Y" target="_blank" rel="noopener noreferrer">https://discord.gg/XVpjXMXQ6Y</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer" title="GitHub Profile">GitHub</a>
+        </div>
+        <p>&copy; 2025 Ignis Solaris Studio. All rights reserved.</p>
+    </footer>
+</body>
+</html>

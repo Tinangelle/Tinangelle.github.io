@@ -6,9 +6,7 @@
     <title>开发日志 #1：奠定基石 - Ignis Solaris Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* 这里是你 index.html 的全部原始样式
-          ... (为简洁省略) ... 
-        */
+        /* 你所有的原始CSS样式... */
         @font-face {
           font-family: 'IgnisFont';
           src: url('./fonts/LeeeafHei-Regular.woff2') format('woff2'),
@@ -31,9 +29,8 @@
             --highlight-color: #e67e22;
         }
         body {
-            /* 为中文版指定更合适的中文字体备选 */
             font-family: 'Montserrat', "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
-            line-height: 1.8; /* 中文行高稍大更易读 */
+            line-height: 1.8; 
             margin: 0;
             padding: 0;
             background-color: var(--background-color);
@@ -58,7 +55,6 @@
         }
         .logo {
             font-family: 'IgnisFont', serif;
-            font-size: 2.2rem;
             font-weight: 700;
             color: var(--primary-color);
             text-decoration: none;
@@ -91,7 +87,7 @@
             padding: 60px 20px;
             max-width: 900px;
             margin: 0 auto;
-            text-align: left;
+            text-align: left; 
         }
         .devlog-article h1 {
             font-family: 'IgnisFont', serif;
@@ -159,7 +155,7 @@
             margin-bottom: 0;
         }
 
-        /* --- 新增：语言切换器样式 --- */
+        /* --- 语言切换器样式 --- */
         .lang-switcher {
             margin-left: 30px;
             font-size: 0.9rem;
@@ -173,7 +169,6 @@
             transition: all 0.3s ease;
         }
         .lang-switcher a.active {
-            /* 当前激活的语言 */
             opacity: 1;
             color: var(--primary-color);
             cursor: default;
@@ -184,15 +179,12 @@
         }
         /* --- 语言切换器样式结束 --- */
 
-
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .logo {
-                font-size: 2.2rem; 
-            }
+            .logo { font-size: 2.2rem; }
             nav ul {
                 margin-top: 15px;
                 width: 100%;
@@ -219,13 +211,12 @@
 <body>
     <header>
         <nav>
-            <a href="index.html" class="logo">IGNIS SOLARIS STUDIO</a>
+            <a href="index-zh.html" class="logo">IGNIS SOLARIS STUDIO</a>
             <ul>
-                <li><a href="index.html#games">Our Games</a></li>
-                <li><a href="index.html#about">About Us</a></li>
-                <li><a href="devlog.html">Devlog</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-                
+                <li><a href="index-zh.html#games">我们的游戏</a></li>
+                <li><a href="index-zh.html#about">关于我们</a></li>
+                <li><a href="devlog-zh.html">开发日志</a></li>
+                <li><a href="index-zh.html#contact">联系我们</a></li>
                 <li class="lang-switcher">
                     <a href="devlog-01-en.html">EN</a>
                     <span>/</span>
@@ -239,12 +230,10 @@
         <section class="devlog-article">
             <h1>开发日志 #1：奠定基石</h1>
             <span class="date">2025年10月18日</span>
-
             <h2>关于我们</h2>
             <p>
                 大家好！我是Jade，你也可以叫我 33。我是 Ignis Solaris Studio 的创始人。我们是一家坐标在加拿大多伦多的新独立游戏工作室。虽然目前主要是我一个人在开发，但我非常幸运地拥有家人和朋友的无条件支持。
             </p>
-
             <h2>关于游戏</h2>
             <p>
                 我们的第一个项目是《Back to Thawing Valley》（目前还是代号！）。
@@ -252,7 +241,6 @@
             <p>
                 我们真心想做一个真正舒适温馨的游戏，一个可以让人放松的心理庇护所。这是一款模拟经营游戏，我们希望你能在这里找到片刻的平静和安宁。我们的目标是创造一个空间，让你能享受清净的生活，与自然、小动物、还有小镇的居民们建立温和、愉快的关系。
             </p>
-
             <h2>关于开发日志</h2>
             <p>
                 我们启动这个开发日志，是想从一开始就和大家分享这段旅程。我们希望能透明地进行开发，也为自己的工作留个痕（这对我们自己也是一种督促！）。
@@ -260,7 +248,6 @@
             <p>
                 最重要的是，我们希望能给大家带来一种“养成感”——看着这个游戏从最初的火花开始，和我们一起成长。
             </p>
-
             <h2>本期进展：搭建大本营</h2>
             <p>
                 在写这篇文章之前，我们的主要精力都放在游戏本身。目前，我们已经完成了核心的“游戏设计文档”和一个“垂直切片”来验证我们的核心玩法。
@@ -271,14 +258,11 @@
             <p>
                 完成了这些基础工作后，我们迈出了下一步：正式注册了 <strong>Ignis Solaris Studio Inc.</strong> 这家公司，并且（终于！）搭建了这个官方网站。从今天起，这里就是我们所有更新的“大本营”。我们也在忙着整理我们的 GitHub 仓库，让它更清晰。
             </p>
-
             <h2>下一步？</h2>
             <p>
                 我们接下来两周的目标，是深入研究玩家自定义功能。我们会专注于搭建初始的角色创建系统——特别是实现调色板换装，以及为未来的服装系统打好框架。与此同时，我们也会继续完善游戏的主地图。
             </p>
-
             <hr>
-
             <h2>加入我们</h2>
             <p>
                 感谢你阅读我们的第一篇日志！我们欢迎所有的意见和建议。你可以在 GitHub 上关注我们的技术进展，或者加入我们的 Discord 服务器一起来聊天。
@@ -297,7 +281,7 @@
         <div class="social-links">
             <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer" title="GitHub Profile">GitHub</a>
         </div>
-        <p>&copy; 2025 Ignis Solaris Studio. All rights reserved.</p>
+        <p>&copy; 2025 Ignis Solaris Studio. 保留所有权利。</p>
     </footer>
 </body>
 </html>

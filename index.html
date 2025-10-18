@@ -7,13 +7,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         @font-face {
-  font-family: 'IgnisFont'; /* 这是你给字体起的“昵称”，可以随便起 */
-  src: url('./fonts/LeeeafHei-Regular.woff2') format('woff2'),
-       url('./fonts/LeeeafHei-Regular.woff') format('woff');
-  font-weight: 400; /* 如果是粗体就写 700 或 bold，如果是常规体就写 400 或 normal */
-  font-style: normal;
-}
-        :root {
+          font-family: 'IgnisFont'; /* 这是你给字体起的“昵称”，可以随便起 */
+          src: url('./fonts/LeeeafHei-Regular.woff2') format('woff2'),
+               url('./fonts/LeeeafHei-Regular.woff') format('woff');
+      font-weight: 400; /* 如果是粗体就写 700 或 bold，如果是常规体就写 400 或 normal */
+      font-style: normal;
+    }
+        @font-face {
+          font-family: 'UranusPixelFont'; /* 给它起个新昵称 */
+          src: url('./fonts/uranus_pixel_11px-webfont.woff2') format('woff2'),
+                  url('./fonts/uranus_pixel_11px-webfont.woff') format('woff');
+          font-weight: normal; /* 像素字体通常是 normal (400) */
+          font-style: normal;
+        }
+        : root {
             --primary-color: #f75d0b; /* A warm orange/red */
             --secondary-color: #2c3e50; /* Dark blue/charcoal */
             --text-color: #ecf0f1; /* Light gray for contrast */
@@ -170,7 +177,9 @@
         }
 
         .game-card h3 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'UranusPixelFont', serif;
+            font-smoothing: none; /* <--- 可选，让像素更清晰 */
+            -webkit-font-smoothing: none; /* <--- 针对 Chrome/Safari */
             color: var(--primary-color);
             font-size: 2rem;
             margin-top: 0;

@@ -6,6 +6,13 @@
     <title>Ignis Solaris Studio - Forging worlds from a single spark.</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+  : 'IgnisFont'; /* 这是你给字体起的“昵称”，可以随便起 */
+  src: url('./fonts/LeeeafHei-Regular.woff2') format('woff2'),
+       url('./fonts/LeeeafHei-Regular.woff') format('woff');
+  font-weight: 700; /* 如果是粗体就写 700 或 bold，如果是常规体就写 400 或 normal */
+  font-style: normal;
+}
         :root {
             --primary-color: #f75d0b; /* A warm orange/red */
             --secondary-color: #2c3e50; /* Dark blue/charcoal */
@@ -15,7 +22,7 @@
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            : 'Montserrat', sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
@@ -44,7 +51,7 @@
         }
 
         .logo {
-            font-family: 'Playfair Display', serif;
+            : 'IgnisFont', serif;
             font-size: 2.2rem;
             font-weight: 700;
             color: var(--primary-color);
@@ -90,7 +97,7 @@
         }
 
         .hero h1 {
-            font-family: 'Playfair Display', serif;
+            : 'Playfair Display', serif;
             font-size: 3.5rem;
             color: var(--primary-color);
             margin-bottom: 20px;
@@ -126,7 +133,7 @@
         }
 
         section h2 {
-            font-family: 'Playfair Display', serif;
+            : 'Playfair Display', serif;
             font-size: 2.8rem;
             color: var(--primary-color);
             margin-bottom: 40px;
@@ -163,7 +170,7 @@
         }
 
         .game-card h3 {
-            font-family: 'Playfair Display', serif;
+            : 'Playfair Display', serif;
             color: var(--primary-color);
             font-size: 2rem;
             margin-top: 0;

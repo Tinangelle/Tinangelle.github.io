@@ -52,20 +52,20 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-        /* LOGO 链接改为主页 index.html */
         .logo {
             font-family: 'IgnisFont', serif;
-            font-size: 2.2rem;
             font-weight: 700;
             color: var(--primary-color);
             text-decoration: none;
             line-height: 1;
+            font-size: 2.0rem;
         }
         nav ul {
             list-style: none;
             margin: 0;
             padding: 0;
             display: flex;
+            align-items: center;
         }
         nav ul li {
             margin-left: 25px;
@@ -79,17 +79,14 @@
         nav ul li a:hover {
             color: var(--primary-color);
         }
-        
-        /* 主要内容区域 */
         main {
-            padding-top: 40px; /* 在 header 下方留出一些空间 */
+            padding-top: 40px;
         }
-        
         section {
             padding: 60px 20px;
-            max-width: 900px; /* 可以比主页稍宽，方便阅读 */
+            max-width: 900px;
             margin: 0 auto;
-            text-align: left; /* 日志列表和内容适合左对齐 */
+            text-align: left;
         }
         section h2 {
             font-family: 'IgnisFont', serif;
@@ -98,7 +95,7 @@
             margin-bottom: 40px;
             position: relative;
             padding-bottom: 10px;
-            text-align: center; /* 大标题居中 */
+            text-align: center;
         }
         section h2::after {
             content: '';
@@ -110,8 +107,6 @@
             height: 3px;
             background-color: var(--primary-color);
         }
-        
-        /* 日志条目样式 */
         .log-entry {
             background-color: var(--secondary-color);
             padding: 25px 30px;
@@ -149,15 +144,13 @@
             color: var(--text-color);
             margin-bottom: 0;
         }
-
-        /* 页脚 */
         footer {
             background-color: var(--secondary-color);
             color: var(--text-color);
             text-align: center;
             padding: 40px 20px;
             font-size: 0.9rem;
-            margin-top: 60px; /* 和顶部 main 的 padding 呼应 */
+            margin-top: 60px;
         }
         footer .social-links a {
             color: var(--text-color);
@@ -174,12 +167,36 @@
             margin-bottom: 0;
         }
 
-        /* 响应式调整 */
+        /* --- 语言切换器样式 --- */
+        .lang-switcher {
+            margin-left: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .lang-switcher a {
+            color: var(--text-color);
+            opacity: 0.6;
+            text-decoration: none;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+        .lang-switcher a.active {
+            opacity: 1;
+            color: var(--primary-color);
+            cursor: default;
+        }
+        .lang-switcher a:not(.active):hover {
+            opacity: 1;
+            color: var(--highlight-color);
+        }
+        /* --- 语言切换器样式结束 --- */
+
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .logo { font-size: 2.2rem; }
             nav ul {
                 margin-top: 15px;
                 width: 100%;
@@ -187,6 +204,12 @@
             }
             nav ul li {
                 margin: 0 10px;
+            }
+            .lang-switcher {
+                position: absolute;
+                top: 1.2rem;
+                right: 20px;
+                margin-left: 0;
             }
             section {
                 padding: 40px 15px;
@@ -203,12 +226,17 @@
 <body>
     <header>
         <nav>
-            <a href="index.html" class="logo">IGNIS SOLARIS STUDIO</a>
+            <a href="index-en.html" class="logo">IGNIS SOLARIS STUDIO</a>
             <ul>
-                <li><a href="index.html#games">Our Games</a></li>
-                <li><a href="index.html#about">About Us</a></li>
-                <li><a href="devlog.html">Devlog</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="index-en.html#games">Our Games</a></li>
+                <li><a href="index-en.html#about">About Us</a></li>
+                <li><a href="devlog-en.html" style="color: var(--primary-color);">Devlog</a></li>
+                <li><a href="index-en.html#contact">Contact</a></li>
+                <li class="lang-switcher">
+                    <a href="devlog-en.html" class="active">EN</a>
+                    <span>/</span>
+                    <a href="devlog-zh.html">ZH</a>
+                </li>
             </ul>
         </nav>
     </header>
@@ -218,16 +246,15 @@
             <h2>Development Log</h2>
             
             <article class="log-entry">
-    <h3><a href="devlog-01-en.html">Devlog #1: Laying the Foundation</a></h3>
-    <span class="date">October 18, 2025</span>
-    <p>Welcome to the very first devlog! In this post, we introduce the studio, our vision for a cozy sanctuary, and the foundations we've laid...</p>
-
-    <p style="margin-top: 15px; font-size: 1rem;">
-        Read in: 
-        <a href="devlog-01-en.html" style="font-weight: bold;">English</a> / 
-        <a href="devlog-01-zh.html" style="font-weight: bold;">中文</a>
-    </p>
-</article>
+                <h3><a href="devlog-01-en.html">Devlog #1: Laying the Foundation</a></h3>
+                <span class="date">October 18, 2025</span>
+                <p>Welcome to the very first devlog! In this post, we introduce the studio, our vision for a cozy sanctuary, and the foundations we've laid...</p>
+                <p style="margin-top: 15px; font-size: 1rem;">
+                    Read in: 
+                    <a href="devlog-01-en.html" style="font-weight: bold;">English</a> / 
+                    <a href="devlog-01-zh.html" style="font-weight: bold;">中文</a>
+                </p>
+            </article> 
 
         </section>
     </main>

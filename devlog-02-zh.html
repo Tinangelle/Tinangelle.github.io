@@ -4,28 +4,42 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Back to Thawing Valley - Devlog #2</title>
-	
 	<link rel="stylesheet" href="style.css"> 
 </head>
 <body>
+	<header>
+		<nav>
+			<a href="index-zh.html" class="logo">IGNIS SOLARIS STUDIO</a>
+			<ul>
+				<li><a href="index-zh.html#games">我们的游戏</a></li>
+				<li><a href="index-zh.html#about">关于我们</a></li>
+				<li><a href="devlog-zh.html">开发日志</a></li>
+				<li><a href="index-zh.html#contact">联系</a></li>
+				<li class="lang-switcher">
+					<a href="devlog-02-en.html">EN</a>
+					<span>/</span>
+					<a href="devlog-02-zh.html" class="active">ZH</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
 
-	<div class="container">
-		
+	<main class="container">
 		<article>
 			<h1>Devlog #2: 欢迎来到“出生地”——会呼吸的捏人系统</h1>
 			
 			<p>大家好！《Back to Thawing Valley》的 Devlog #2 终于来了！</p>
 			
-			<p>在过去的两周里，我们集中火力完成了一个至关重要的系统：<strong>角色的“出生地”</strong>——多页捏人系统 (<code>PlayerSetup.tscn</code>)。</p>
+			<p>在过去的几周里，我们集中火力完成了一个至关重要的系统：<strong>角色的“出生地”</strong>——多页捏人系统 (<code>PlayerSetup.tscn</code>)。</p>
 			
 			<p>我们希望它不只是一个功能，而是更像在翻阅一本关于你自己的书，开启你在山谷的故事序章。</p>
 			
 			<img src="devlog2/全功能展示.gif" alt="Devlog 2 全功能概览 GIF">
 			
-			<p>目前，外观页的功能已经敲定。我们未来计划逐步扩充更多的服装和外观选项！</p>
+			<p>目前，外观页（Page 1）的功能已经敲定。我们未来计划逐步扩充更多的服装和外观选项！</p>
 
 			<h3>核心交互</h3>
-			<p>这一版捏人系统的核心是让 UI 变得更“智能”。在问卷页，你可以自由选择你的“家人”或庆典邀请人。</p>
+			<p>这一版捏人系统的核心是让 UI 变得更“智能”。在问卷页（Page 2），你可以自由选择你的“家人”或庆典邀请人。</p>
 			
 			<p>当然啦，<strong>我们也没忘记独狼玩家</strong>！</p>
 			
@@ -49,9 +63,8 @@
 			
 			<p>虽然还拿不出手，但也想分享一下最近画的两张练习图。它们不一定会出现在最终游戏中，但希望能看到自己的进步！</p>
 			
-			<img src="path/to/YOUR_ART_1.png" alt="美术练习 1">
-			
-			<img src="path/to/YOUR_ART_2.png" alt="美术练习 2">
+			<img src="devlog2/换装页.png" alt="美术练习 1 (换装页)">
+			<img src="devlog2/钓鱼.gif" alt="美术练习 2 (钓鱼 GIF)">
 
 			<h3>技术与打磨</h3>
 			<p>当然，这个冲刺也伴随着大量的 Bug 修复和底层优化。</p>
@@ -68,6 +81,13 @@
 			
 			<p>感谢你的关注，我们下次见！</p>
 		</article>
+	</main>
 
-	</div> </body>
+	<footer>
+ 		<div class="social-links">
+            <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer" title="GitHub Profile">GitHub</a>
+        </div>
+        <p>&copy; 2025 Ignis Solaris Studio. All rights reserved.</p>
+    </footer>
+</body>
 </html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Back to Thawing Valley - Devlog #2</title>
+	
+	<link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+
+	<div class="container">
+		
+		<article>
+			<h1>Devlog #2: 欢迎来到“出生地”——会呼吸的捏人系统</h1>
+			
+			<p>大家好！《Back to Thawing Valley》的 Devlog #2 终于来了！</p>
+			
+			<p>在过去的两周里，我们集中火力完成了一个至关重要的系统：<strong>角色的“出生地”</strong>——多页捏人系统 (<code>PlayerSetup.tscn</code>)。</p>
+			
+			<p>我们希望它不只是一个功能，而是更像在翻阅一本关于你自己的书，开启你在山谷的故事序章。</p>
+			
+			<img src="path/to/YOUR_GIF_1.gif" alt="Devlog 2 全功能概览 GIF">
+			
+			<p>目前，外观页（Page 1）的功能已经敲定。我们未来计划逐步扩充更多的服装和外观选项！</p>
+
+			<h3>核心交互</h3>
+			<p>这一版捏人系统的核心是让 UI 变得更“智能”。在问卷页，你可以自由选择你的“家人”或庆典邀请人。</p>
+			
+			<p>当然啦，<strong>我们也没忘记独狼玩家</strong>！</p>
+			
+			<p>如果你选择不邀请任何人...系统会“读懂”你的选择，并给你一个特殊的反馈。我们希望通过这些小细节让交互变得更有温度。</p>
+			
+			<img src="path/to/YOUR_GIF_2.gif" alt="Devlog 2 “独狼”反馈 GIF">
+
+			<h3>风味与沉浸感：你的独特性</h3>
+			<p>我们加入了许多“风味”问题，希望能照顾到每个人的独特性。</p>
+			
+			<p>也许你更喜欢<strong>深夜钓鱼</strong>，而不是清晨耕种？（下图的生物钟图标）</p>
+			
+			<img src="path/to/YOUR_SCREENSHOT_1.png" alt="Devlog 2 生物钟截图">
+			
+			<p>让我们知道你的生日，也许在山谷里会有人给你悄悄送上礼物呢！</p>
+			
+			<img src="path/to/YOUR_SCREENSHOT_2.png" alt="Devlog 2 生日截图">
+
+			<h3>仍在摸索的美术...</h3>
+			<p>除了代码，我也在努力提升游戏的美术风格！</p>
+			
+			<p>虽然还拿不出手，但也想分享一下最近画的两张练习图。它们不一定会出现在最终游戏中，但希望能看到自己的进步！</p>
+			
+			<img src="path/to/YOUR_ART_1.png" alt="美术练习 1">
+			
+			<img src="path/to/YOUR_ART_2.png" alt="美术练习 2">
+
+			<h3>技术与打磨</h3>
+			<p>当然，这个冲刺也伴随着大量的 Bug 修复和底层优化。</p>
+			
+			<p>我们重构了 UI 布局，彻底解决了 F6 预览时的<strong>相机 <code>current</code> 属性覆盖问题</strong>（之前称为“相机偏移 Bug”），并优化了场景树的渲染顺序，修复了按钮在 <code>NinePatchRect</code> (书本背景)下无法被点击的遮挡问题。</p>
+			
+			<p>虽然这些都是玩家看不见的工作，但它们是保证系统流畅运行的基础。</p>
+
+			<h3>下一步：开垦！</h3>
+			<p>随着捏人系统的核心功能尘埃落定，我们终于可以踏入山谷，开始实现真正的游戏循环了！</p>
+			
+			<p>下一个冲刺（Devlog #3）的目标是：<br>
+			<strong>让玩家可以挥动锄头，并播下第一颗种子！</strong></p>
+			
+			<p>感谢你的关注，我们下次见！</p>
+		</article>
+
+	</div> </body>
+</html>

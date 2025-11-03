@@ -1,23 +1,24 @@
 /* ================================
    Back to Thawing Valley - 样式表
-   主题: Spring Valley (春日山谷) - 精确匹配图版
+   主题: Spring Valley (春日山谷) - 蓝色版
 ================================
 */
 
-/* --- 1. 春日山谷配色方案 (全局变量) --- */
+/* --- 1. 配色方案 (全局变量) --- */
 :root {
-	--bg-main: #F0F9FA;         /* (浅米黄/淡绿色 / 主背景 - Light Creamy Green) */
-	--bg-container: #A8E6CF;    /* (浅绿色 / 内容背景 - Pale Green) */
-	--text-on-light: #4FAAA5;   /* (深湖蓝色 / 浅色背景上的文本 - Dark Teal) */
-	--text-on-dark: #FFFFFF;    /* (纯白色 / 深色背景上的文本 - White) */
-	--accent-primary: #FFD3B6;  /* (草绿色 / 强调色 - Grassy Orange) */
-	--accent-secondary: #4FAAA5; /* (深湖蓝色 / 辅助色 - Dark Teal) */
+	--bg-main: #F0F9FA;         /* (浅米黄/淡绿色 / 主背景) */
+	--bg-container: #94b3d3;    /* 【【【已修改】】】(新蓝色 / 内容背景) */
 	
-    /* --- 新增粉色变量 --- */
-    --border-pink-light: #FFC0CB; /* (淡粉色 / 边框高亮 - Pink) */
-    --border-pink-medium: #FF69B4; /* (中粉色 / 边框强调 - Hot Pink) */
-
-	--font-body: -apple-system, BlinkMacMacFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	/* 【【【已修改】】】为解决对比度，文本改为深绿色 */
+	--text-on-light: #5D4037;   /* (深森林绿 / 蓝色背景上的文本) */
+	--text-on-dark: #5D4037;    /* (深森林绿 / 浅绿色背景上的文本) */
+	
+	/* 【【【已修改】】】保留按钮的橙色，但把刺眼的颜色换成新蓝色 */
+	--accent-button: #FFD3B6;   /* (草绿色/橙色 / 按钮专用) */
+	--accent-link: #4FAAA5;     /* (深湖蓝色 / 链接) */
+	--accent-heading: #4a75a0;  /* 【【【已修改】】】(新蓝色 / 标题和高亮) */
+	
+	--font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 	--font-heading: "Georgia", "Times New Roman", serif;
 }
 
@@ -25,8 +26,8 @@
 /* --- 2. 基础页面样式 --- */
 body {
 	font-family: var(--font-body);
-	background-color: var(--bg-main); /* 主背景色：浅米黄/淡绿色 */
-	color: var(--text-on-light);     /* 默认文本颜色：深湖蓝色 */
+	background-color: var(--bg-main); /* 浅绿色背景 */
+	color: var(--text-on-dark);     /* 深绿色文本 */
 	line-height: 1.7;
 	font-size: 17px;
 	margin: 0;
@@ -55,64 +56,68 @@ header nav {
 	align-items: center;
 }
 
+/* 【【【布局修复】】】防止 Logo 换行 */
 header .logo {
-	color: var(--text-on-light); /* Logo颜色：深湖蓝色 */
+	color: var(--text-on-dark);
 	font-weight: 700;
 	text-decoration: none;
 	font-family: var(--font-heading);
 	font-size: 1.5em;
+	white-space: nowrap; /* 防止 "STUDIO" 掉下去 */
 }
 
+/* 【【【布局修复】】】防止导航列表换行 */
 header nav ul {
 	list-style: none;
 	padding: 0;
 	margin: 0;
 	display: flex;
-	gap: 20px;
+	gap: 15px; /* 缩小间距 */
+	white-space: nowrap; /* 防止列表换行 */
+	flex-wrap: nowrap;
 }
 
 header nav ul li a {
-	color: var(--text-on-light); /* 导航链接颜色：深湖蓝色 */
+	color: var(--text-on-dark);
 	font-weight: 700;
 	text-decoration: none;
 	font-size: 0.9em;
 	opacity: 0.8;
 }
 header nav ul li a:hover {
-	color: var(--accent-primary); /* 悬停变草绿色 */
+	color: var(--accent-heading); /* 悬停变新蓝色 */
 	opacity: 1;
 }
 header nav ul li a.active { /* 高亮当前页面 */
-	color: var(--border-pink-medium); /* 激活链接用中粉色 */
+	color: var(--accent-heading); /* 【【【已修改】】】激活链接用新蓝色 */
 	text-decoration: underline;
 	opacity: 1;
 }
 
 /* --- 5. 内容卡片 (核心样式) --- */
 main.container {
-	background-color: var(--bg-container); /* 卡片背景色：浅绿色 */
-	color: var(--text-on-light);        /* 卡片内文本颜色：深湖蓝色 */
+	background-color: var(--bg-container); /* 【【【已修改】】】卡片背景：新蓝色 */
+	color: var(--text-on-light);        /* 【【【已修改】】】卡片内文本：深绿色 */
 	padding: 30px 40px;
 	border-radius: 8px;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 	margin-top: 20px;
 	margin-bottom: 20px;
-	text-align: left; /* 确保文章都是左对齐 */
-	border: 2px solid var(--border-pink-light); /* 【【新增】】浅粉色边框 */
+	text-align: left;
+	border: none; /* 【【【已修改】】】移除了所有边框 */
 }
 
 /* --- 6. 通用元素样式 --- */
 h1, h2, h3 {
 	font-family: var(--font-heading);
-	color: var(--accent-primary); /* 标题统一用草绿色 */
+	color: var(--accent-heading); /* 【【【已修改】】】标题统一用新蓝色 */
 }
 
-/* 针对卡片内部的 h1 (比如 "Forging worlds...") */
 .container h1 {
     font-size: 2.5em;
     text-align: center;
-    color: var(--text-on-light); /* 卡片内的 H1 用深湖蓝色 */
-    border-bottom: 2px solid var(--accent-secondary); /* 下划线用深湖蓝色 */
+    color: var(--text-on-light); /* 卡片内的 H1 用深绿色 */
+    border-bottom: 2px solid var(--accent-link); /* 下划线用湖蓝色 */
 	padding-bottom: 10px;
 }
 
@@ -121,23 +126,22 @@ p {
 }
 
 a {
-	color: var(--accent-secondary); /* 默认链接为深湖蓝色 */
+	color: var(--accent-link); /* 默认链接为湖蓝色 */
 	text-decoration: none;
 	font-weight: 600;
 	transition: color 0.2s ease;
 }
 a:hover {
-	color: var(--accent-primary); /* 悬停变草绿色 */
+	color: var(--accent-heading); /* 悬停变新蓝色 */
 	text-decoration: underline;
 }
 
-/* 卡片内部的链接 (邮件、Discord等) */
 .container a {
-    color: var(--border-pink-medium); /* 卡片内的链接用中粉色，更醒目 */
+    color: var(--accent-heading); /* 【【【已修改】】】卡片内的链接用新蓝色 */
     font-weight: 700;
 }
 .container a:hover {
-    color: var(--accent-primary); /* 悬停变草绿色 */
+    color: var(--text-on-light); /* 悬停变深绿色 */
 }
 
 img {
@@ -145,23 +149,22 @@ img {
 	height: auto;
 	border-radius: 6px;
 	margin: 20px 0;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-	border: 1px solid var(--border-pink-light); /* 【【新增】】图片边框用淡粉色 */
+	border: none; /* 【【【已修改】】】移除了所有边框 */
 }
 
 hr {
 	border: 0;
 	height: 2px;
 	background-image: linear-gradient(to right, 
-		rgba(79, 170, 165, 0), /* 深湖蓝色透明 */
-		rgba(79, 170, 165, 0.3), /* 深湖蓝色 */
-		rgba(79, 170, 165, 0)
+		rgba(93, 64, 55, 0), /* 深绿色透明 */
+		rgba(93, 64, 55, 0.3), /* 深绿色 */
+		rgba(93, 64, 55, 0)
 	);
 	margin: 40px 0;
 }
 
 code {
-	background-color: rgba(79, 170, 165, 0.1); /* 深湖蓝色底色 */
+	background-color: rgba(93, 64, 55, 0.1);
 	color: var(--text-on-light);
 	padding: 2px 5px;
 	border-radius: 4px;
@@ -172,8 +175,8 @@ code {
 .btn,
 .cta-btn {
     display: inline-block;
-    background-color: var(--accent-primary); /* 草绿色背景 */
-    color: var(--text-on-dark); /* 纯白色文本 */
+    background-color: var(--accent-button); /* 【【【保留】】】按钮背景：草绿色/橙色 */
+    color: var(--text-on-light); /* 【【【已修改】】】按钮文本：深绿色 */
     padding: 10px 18px;
     border-radius: 5px;
     text-decoration: none;
@@ -181,54 +184,53 @@ code {
     font-family: var(--font-heading);
     margin-top: 15px;
     transition: all 0.2s ease;
-    border: 1px solid var(--border-pink-medium); /* 【【新增】】按钮边框用中粉色 */
+	border: none; /* 【【【已修改】】】移除了所有边框 */
 }
 .btn:hover,
 .cta-btn:hover {
-    background-color: var(--accent-secondary); /* 悬停变深湖蓝色 */
-    color: var(--text-on-dark); /* 文本纯白色 */
+    background-color: var(--accent-link); /* 悬停变湖蓝色 */
+    color: var(--bg-main); /* 文本变浅绿色 */
     text-decoration: none;
-    border-color: var(--border-pink-light); /* 【【新增】】悬停边框用淡粉色 */
 }
 
-/* --- 8. Devlog 列表样式 (devlog-zh.html) --- */
+/* --- 8. Devlog 列表样式 --- */
 .log-entry {
-    border-bottom: 2px dashed var(--border-pink-light); /* 【【新增】】日志分隔线用淡粉色虚线 */
+    /* 【【【已修改】】】分隔线用深绿色虚线 */
+	border-bottom: 2px dashed rgba(93, 64, 55, 0.2); 
     padding-bottom: 20px;
     margin-bottom: 20px;
 }
 .log-entry:last-child {
-    border-bottom: none; /* 最后一篇日志没有分隔线 */
+    border-bottom: none;
 }
 .log-entry .date {
     font-size: 0.9em;
-    color: var(--accent-secondary); /* 日期用深湖蓝色 */
+    color: var(--accent-link); /* 日期用湖蓝色 */
     font-style: italic;
 }
 .log-entry h3 {
     margin-bottom: 0.2em;
 }
 .log-entry h3 a {
-    color: var(--text-on-light); /* 日志标题用深湖蓝色 */
+    color: var(--text-on-light); /* 日志标题用深绿色 */
     text-decoration: none;
 }
 .log-entry h3 a:hover {
-    color: var(--border-pink-medium); /* 悬停变中粉色 */
+    color: var(--accent-heading); /* 悬停变新蓝色 */
 }
-
 
 /* --- 9. 页脚样式 --- */
 footer {
 	text-align: center;
 	font-size: 0.9em;
-	color: var(--text-on-light); /* 页脚文本颜色：深湖蓝色 */
+	color: var(--text-on-dark); /* 页脚文本：深绿色 */
 	opacity: 0.7;
 	padding-top: 20px;
 }
 footer a {
-    color: var(--text-on-light); /* 页脚链接颜色：深湖蓝色 */
+    color: var(--text-on-dark); /* 页脚链接：深绿色 */
     font-weight: bold;
 }
 footer a:hover {
-    color: var(--border-pink-medium); /* 悬停变中粉色 */
+    color: var(--accent-heading); /* 悬停变新蓝色 */
 }

@@ -1,13 +1,15 @@
 /* ================================
    Back to Thawing Valley - 样式表
-   主题: Autumn (秋季) - 修复版
+   主题: Autumn (秋季) - 浓彩版
 ================================
 */
 
 /* --- 1. 秋季配色方案 (全局变量) --- */
 :root {
-	--bg-main: #UFF3E0;        /* (淡米白 / 主背景) */
-	--text-main: #5D4037;       /* (深森林绿 / 主要文本) */
+	--bg-main: #5D4037;        /* (深森林绿 / 【新】主背景) */
+	--text-on-dark: #UFF3E0;    /* (淡米白 / 深色背景上的文本) */
+	--bg-container: #UFF3E0;    /* (淡米白 / 内容背景) */
+	--text-on-light: #5D4037;   /* (深森林绿 / 浅色背景上的文本) */
 	--accent-primary: #FF7043;  /* (焦橙色 / 强调色) */
 	--accent-secondary: #D4A555; /* (深金棕色 / 辅助色) */
 	
@@ -15,24 +17,20 @@
 	--font-heading: "Georgia", "Times New Roman", serif;
 }
 
+
 /* --- 2. 基础页面样式 --- */
 body {
 	font-family: var(--font-body);
-	background-color: var(--bg-main);
-	color: var(--text-main);
+	background-color: var(--bg-main); /* 【【【修改】】】大片颜色：深绿色背景 */
+	color: var(--text-on-dark);     /* 【【【修改】】】默认文本（页脚等）为米白色 */
 	line-height: 1.7;
 	font-size: 17px;
 	margin: 0;
-	padding: 20px; /* 页面边缘留出空隙 */
+	padding: 20px;
 	box-sizing: border-box;
 }
 
 /* --- 3. 页面布局 (重要) --- */
-/*
- * 我们让你所有的主要“块”
- * (header, main, footer)
- * 都居中显示，最大宽度为 800px
-*/
 header,
 main,
 footer {
@@ -42,7 +40,7 @@ footer {
 	box-sizing: border-box;
 }
 
-/* --- 4. 头部和导航栏 (来自 devlog-01) --- */
+/* --- 4. 头部和导航栏 --- */
 header {
 	padding-bottom: 20px;
 }
@@ -54,11 +52,11 @@ header nav {
 }
 
 header .logo {
-	color: var(--text-main);
+	color: var(--text-on-dark); /* 【【【修改】】】在深色背景上，Logo为米白色 */
 	font-weight: 700;
 	text-decoration: none;
 	font-family: var(--font-heading);
-	font-size: 1.5em; /* 让 logo 突出一点 */
+	font-size: 1.5em;
 }
 
 header nav ul {
@@ -66,64 +64,69 @@ header nav ul {
 	padding: 0;
 	margin: 0;
 	display: flex;
-	gap: 20px; /* 菜单项之间的间距 */
+	gap: 20px;
 }
 
 header nav ul li a {
-	color: var(--text-main);
+	color: var(--text-on-dark); /* 【【【修改】】】导航链接为米白色 */
 	font-weight: 700;
 	text-decoration: none;
 	font-size: 0.9em;
+	opacity: 0.8; /* 稍微柔和一点 */
 }
 header nav ul li a:hover {
-	color: var(--accent-primary);
+	color: var(--accent-primary); /* 悬停变焦橙色 */
+	opacity: 1;
 }
 header nav ul li a.active { /* 高亮当前页面 */
 	color: var(--accent-primary);
 	text-decoration: underline;
+	opacity: 1;
 }
 
-/* --- 5. 内容白框 (关键修复) --- */
-/* * 这会同时匹配 .devlog-article (你的旧文件) 
- * 和 .container (你的新文件)
-*/
+/* --- 5. 内容卡片 (关键修改) --- */
+/* (这会匹配 .devlog-article, .container, 和 .log-entry) */
 .devlog-article,
-.container {
-	background-color: rgba(255, 255, 255, 0.5);
+.container,
+.log-entry {
+	background-color: var(--bg-container); /* 【【【修改】】】容器背景为米白色 */
+	color: var(--text-on-light);        /* 【【【修改】】】容器内文本为深绿色 */
 	padding: 30px 40px;
 	border-radius: 8px;
-	box-shadow: 0 4px 12px rgba(93, 64, 55, 0.1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 	margin-top: 20px;
 	margin-bottom: 20px;
+	text-align: left; /* 确保文章都是左对齐 */
 }
 
-/* --- 6. 修复你的 index 页面 (那个奇怪的页面) --- */
-/* * 你 'index.html' 上的内容（比如 "Forging worlds..."）
- * 需要被一个 <main> 标签包裹
- * 我们给 'main' 标签也加上一些样式
-*/
+/* --- 6. 修复你的 index 页面 --- */
 main {
-	/* * 如果 'main' 标签内部 *没有* .container 或 .devlog-article,
-	 * 我们至少让它居中。
-	 * 你的 index.html 页面需要被编辑！
-	*/
-	text-align: center;
-}
-
-main h1 {
-	text-align: center;
-	color: var(--text-main);
-	border-bottom: 2px solid var(--accent-secondary);
-	padding-bottom: 10px;
-}
-
-main h2 {
-	color: var(--accent-primary);
+	text-align: center; /* 默认让 main 里的内容居中 (这对 index 很好) */
 }
 
 /* --- 7. 通用元素样式 --- */
 h1, h2, h3 {
 	font-family: var(--font-heading);
+	color: var(--accent-primary); /* 标题统一用焦橙色 */
+}
+
+/* 主页 (index) 上的H1 */
+h1 {
+    font-size: 2.5em;
+    text-align: center;
+    color: var(--text-on-dark); /* 默认 H1 是浅色 (用于 index 页) */
+    border-bottom: 2px solid var(--accent-secondary);
+	padding-bottom: 10px;
+}
+
+/* Devlog 文章内的 H1 (在卡片里) */
+.container h1,
+.devlog-article h1 {
+    color: var(--text-on-light); /* 容器内的 H1 用深绿色 */
+}
+
+p {
+	font-size: 1.1em;
 }
 
 a {
@@ -143,23 +146,24 @@ img {
 	height: auto;
 	border-radius: 6px;
 	margin: 20px 0;
-	box-shadow: 0 2px 8px rgba(93, 64, 55, 0.15);
-	border: 1px solid rgba(93, 64, 55, 0.1);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 hr {
 	border: 0;
 	height: 2px;
 	background-image: linear-gradient(to right, 
-		rgba(93, 64, 55, 0), 
-		rgba(93, 64, 55, 0.3), 
-		rgba(93, 64, 55, 0)
+		rgba(255, 243, 224, 0), 
+		rgba(255, 243, 224, 0.3),  /* 【【【修改】】】分隔线用米白色 */
+		rgba(255, 243, 224, 0)
 	);
 	margin: 40px 0;
 }
 
 code {
-	background-color: rgba(93, 64, 55, 0.1);
+	background-color: rgba(93, 64, 55, 0.2); /* 在米白背景上，深色背景更合适 */
+	color: var(--text-on-light);
 	padding: 2px 5px;
 	border-radius: 4px;
 	font-family: monospace;
@@ -169,7 +173,14 @@ code {
 footer {
 	text-align: center;
 	font-size: 0.9em;
-	color: var(--text-main);
+	color: var(--text-on-dark); /* 【【【修改】】】页脚文本为米白色 */
 	opacity: 0.7;
 	padding-top: 20px;
+}
+footer a {
+    color: var(--text-on-dark); /* 【【【修改】】】页脚链接也为米白色 */
+    font-weight: bold;
+}
+footer a:hover {
+    color: var(--accent-primary);
 }

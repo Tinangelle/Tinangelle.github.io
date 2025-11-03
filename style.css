@@ -1,6 +1,6 @@
 /* ================================
    Back to Thawing Valley - 样式表
-   主题: Autumn (秋季)
+   主题: Autumn (秋季) - 修复版
 ================================
 */
 
@@ -11,57 +11,121 @@
 	--accent-primary: #FF7043;  /* (焦橙色 / 强调色) */
 	--accent-secondary: #D4A555; /* (深金棕色 / 辅助色) */
 	
-	/* 字体变量 (使用系统字体和衬线体) */
 	--font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-	--font-heading: "Georgia", "Times New Roman", serif; /* 标题用衬线体，更有书本感 */
+	--font-heading: "Georgia", "Times New Roman", serif;
 }
-
 
 /* --- 2. 基础页面样式 --- */
 body {
 	font-family: var(--font-body);
 	background-color: var(--bg-main);
 	color: var(--text-main);
-	line-height: 1.7; /* 增加了行高 */
-	font-size: 17px;  /* 基础字号 */
+	line-height: 1.7;
+	font-size: 17px;
 	margin: 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 20px;
+	padding: 20px; /* 页面边缘留出空隙 */
+	box-sizing: border-box;
 }
 
-.container {
+/* --- 3. 页面布局 (重要) --- */
+/*
+ * 我们让你所有的主要“块”
+ * (header, main, footer)
+ * 都居中显示，最大宽度为 800px
+*/
+header,
+main,
+footer {
 	max-width: 800px;
 	width: 100%;
-	background-color: rgba(255, 255, 255, 0.5); /* 半透明的白色背景，增加层次感 */
+	margin: 0 auto; /* 自动外边距实现水平居中 */
+	box-sizing: border-box;
+}
+
+/* --- 4. 头部和导航栏 (来自 devlog-01) --- */
+header {
+	padding-bottom: 20px;
+}
+
+header nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+header .logo {
+	color: var(--text-main);
+	font-weight: 700;
+	text-decoration: none;
+	font-family: var(--font-heading);
+	font-size: 1.5em; /* 让 logo 突出一点 */
+}
+
+header nav ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	gap: 20px; /* 菜单项之间的间距 */
+}
+
+header nav ul li a {
+	color: var(--text-main);
+	font-weight: 700;
+	text-decoration: none;
+	font-size: 0.9em;
+}
+header nav ul li a:hover {
+	color: var(--accent-primary);
+}
+header nav ul li a.active { /* 高亮当前页面 */
+	color: var(--accent-primary);
+	text-decoration: underline;
+}
+
+/* --- 5. 内容白框 (关键修复) --- */
+/* * 这会同时匹配 .devlog-article (你的旧文件) 
+ * 和 .container (你的新文件)
+*/
+.devlog-article,
+.container {
+	background-color: rgba(255, 255, 255, 0.5);
 	padding: 30px 40px;
 	border-radius: 8px;
 	box-shadow: 0 4px 12px rgba(93, 64, 55, 0.1);
-	box-sizing: border-box; 
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
-/* --- 3. 文本与标题样式 --- */
-h1, h2, h3 {
-	font-family: var(--font-heading);
-	color: var(--accent-primary);
-	margin-top: 1.5em;
-	margin-bottom: 0.5em;
-}
-
-h1 {
+/* --- 6. 修复你的 index 页面 (那个奇怪的页面) --- */
+/* * 你 'index.html' 上的内容（比如 "Forging worlds..."）
+ * 需要被一个 <main> 标签包裹
+ * 我们给 'main' 标签也加上一些样式
+*/
+main {
+	/* * 如果 'main' 标签内部 *没有* .container 或 .devlog-article,
+	 * 我们至少让它居中。
+	 * 你的 index.html 页面需要被编辑！
+	*/
 	text-align: center;
-	color: var(--text-main); /* 主标题用深绿色，更稳重 */
+}
+
+main h1 {
+	text-align: center;
+	color: var(--text-main);
 	border-bottom: 2px solid var(--accent-secondary);
 	padding-bottom: 10px;
 }
 
-p {
-	font-size: 1.1em;
+main h2 {
+	color: var(--accent-primary);
 }
 
-/* 链接 */
+/* --- 7. 通用元素样式 --- */
+h1, h2, h3 {
+	font-family: var(--font-heading);
+}
+
 a {
 	color: var(--accent-secondary);
 	text-decoration: none;
@@ -74,7 +138,6 @@ a:hover {
 	text-decoration: underline;
 }
 
-/* --- 4. 媒体与分隔线 --- */
 img {
 	max-width: 100%;
 	height: auto;
@@ -95,10 +158,18 @@ hr {
 	margin: 40px 0;
 }
 
-/* 代码块样式 */
 code {
 	background-color: rgba(93, 64, 55, 0.1);
 	padding: 2px 5px;
 	border-radius: 4px;
 	font-family: monospace;
+}
+
+/* --- 8. 页脚样式 --- */
+footer {
+	text-align: center;
+	font-size: 0.9em;
+	color: var(--text-main);
+	opacity: 0.7;
+	padding-top: 20px;
 }

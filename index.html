@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interactive Side-Scrolling Portfolio</title>
+  <script>
+    try {
+      history.scrollRestoration = "manual";
+    } catch (_) {}
+  </script>
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     :root {
       --nav-height: 64px;
       --sheet-cols: 4;
@@ -44,28 +53,112 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: var(--nav-height);
+      min-height: var(--nav-height);
       z-index: 50;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1rem;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.65rem 1rem;
+      padding: 0.65rem clamp(1rem, 4vw, 1.75rem);
       backdrop-filter: blur(8px);
       background: rgba(0, 0, 0, 0.55);
       border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    .top-nav a {
+    .top-nav__brand {
       text-decoration: none;
       color: #fff;
-      padding: 0.45rem 0.75rem;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      transition: background 0.2s ease;
+      font-weight: 700;
+      font-size: clamp(0.7rem, 1.85vw, 0.95rem);
+      letter-spacing: 0.07em;
+      line-height: 1.25;
+      padding: 0.38rem 0;
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
     }
 
-    .top-nav a:hover {
+    .top-nav__brand:hover {
+      opacity: 0.88;
+    }
+
+    .top-nav__links {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.42rem;
+    }
+
+    .top-nav__link {
+      text-decoration: none;
+      color: #fff;
+      font-size: clamp(0.78rem, 1.65vw, 0.92rem);
+      font-weight: 600;
+      padding: 0.42rem 0.82rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .top-nav__link:hover {
       background: rgba(255, 255, 255, 0.2);
+    }
+
+    .top-nav__link:focus-visible {
+      outline: 2px solid rgba(120, 200, 255, 0.95);
+      outline-offset: 2px;
+    }
+
+    .top-nav__link.is-active {
+      background: rgba(120, 200, 255, 0.22);
+      border-color: rgba(120, 200, 255, 0.45);
+      box-shadow: 0 0 0 1px rgba(120, 200, 255, 0.15);
+      color: #fff;
+    }
+
+    .top-nav__lang {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.12rem;
+      margin-left: 0.35rem;
+      padding-left: 0.65rem;
+      border-left: 1px solid rgba(255, 255, 255, 0.22);
+      font-size: clamp(0.78rem, 1.65vw, 0.92rem);
+    }
+
+    .top-nav__lang-btn {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: none;
+      color: rgba(255, 255, 255, 0.55);
+      font: inherit;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .top-nav__lang-btn:hover {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .top-nav__lang-btn:focus-visible {
+      outline: 2px solid rgba(120, 200, 255, 0.95);
+      outline-offset: 3px;
+    }
+
+    .top-nav__lang-btn.is-current {
+      color: #fff;
+    }
+
+    .top-nav__lang-sep {
+      color: rgba(255, 255, 255, 0.4);
+      user-select: none;
     }
 
     .viewport {
@@ -110,10 +203,21 @@
       min-height: 0;
     }
 
-    .showcase-section:nth-child(1) { background: linear-gradient(130deg, #243b55, #141e30); }
-    .showcase-section:nth-child(2) { background: linear-gradient(130deg, #373b44, #4286f4); }
-    .showcase-section:nth-child(3) { background: linear-gradient(130deg, #0f2027, #2c5364); }
-    .showcase-section:nth-child(4) { background: linear-gradient(130deg, #232526, #414345); }
+    .showcase-section--welcome {
+      background: linear-gradient(130deg, #243b55, #141e30);
+    }
+
+    .showcase-section--about {
+      background: linear-gradient(130deg, #373b44, #4286f4);
+    }
+
+    .showcase-section--projects {
+      background: linear-gradient(130deg, #0f2027, #2c5364);
+    }
+
+    .showcase-section--contact {
+      background: linear-gradient(130deg, #232526, #414345);
+    }
 
     .welcome-stack {
       display: flex;
@@ -447,18 +551,19 @@
     .project-block {
       display: flex;
       flex-direction: column;
+      position: relative;
       border-radius: 12px;
       overflow: hidden;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      cursor: pointer;
-      transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+      cursor: default;
+      transition: border-color 0.2s ease, transform 0.18s ease;
       text-align: left;
+      outline-offset: 2px;
     }
 
     .project-block:hover {
       border-color: rgba(255, 255, 255, 0.28);
-      background: rgba(255, 255, 255, 0.1);
       transform: translateY(-3px);
     }
 
@@ -541,72 +646,97 @@
       color: #c8e6ff;
     }
 
-    .project-hint {
-      margin-top: 0.35rem;
-      font-size: 0.68rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.45);
-    }
-
-    /* Modal */
-    .project-modal-overlay {
-      position: fixed;
+    .project-hover {
+      position: absolute;
       inset: 0;
-      z-index: 100;
-      display: grid;
-      place-items: center;
-      padding: 1.5rem;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(6px);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(0.65rem, 3vw, 1rem);
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+      transition:
+        opacity 0.22s ease,
+        visibility 0s linear 0.22s;
     }
 
-    .project-modal-overlay.is-open {
+    .project-block:hover .project-hover,
+    .project-block:focus-within .project-hover {
       opacity: 1;
       visibility: visible;
+      pointer-events: auto;
+      transition-delay: 0s, 0s;
     }
 
-    .project-modal {
-      width: min(420px, 100%);
-      border-radius: 14px;
-      background: #1e242c;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
-      padding: 1.35rem 1.4rem 1.25rem;
-      transform: translateY(12px);
-      transition: transform 0.22s ease;
+    /* 背景毛玻璃覆盖在缩略图文案之上；操作区单独一层且不使用 backdrop-filter，避免按钮发糊 */
+    .project-hover__glass {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      background: rgba(18, 22, 30, 0.42);
+      backdrop-filter: blur(14px) saturate(1.15);
+      -webkit-backdrop-filter: blur(14px) saturate(1.15);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    .project-modal-overlay.is-open .project-modal {
-      transform: translateY(0);
-    }
-
-    .project-modal h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-      line-height: 1.35;
-    }
-
-    .project-modal .modal-desc {
-      font-size: 0.88rem;
-      line-height: 1.55;
-      color: rgba(245, 245, 245, 0.88);
-      margin-bottom: 0.75rem;
-    }
-
-    .project-modal-status {
-      font-size: 0.8rem;
-      color: rgba(255, 200, 120, 0.95);
-      margin-bottom: 1rem;
-    }
-
-    .project-modal-actions {
+    .project-hover__actions {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
+      align-items: stretch;
+      gap: 0.45rem;
+      width: min(11.5rem, 100%);
+      transform: translateZ(0);
+    }
+
+    .project-action-btn {
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      color: #f2f6fc;
+      background: rgba(28, 34, 44, 0.92);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .project-action-btn:hover {
+      background: rgba(42, 52, 68, 0.98);
+      border-color: rgba(200, 220, 255, 0.4);
+      color: #fff;
+    }
+
+    .project-action-btn:focus-visible {
+      outline: 2px solid rgba(120, 200, 255, 0.95);
+      outline-offset: 2px;
+    }
+
+    .project-action-btn--primary {
+      background: rgba(75, 140, 230, 0.88);
+      border-color: rgba(150, 200, 255, 0.55);
+      color: #fff;
+    }
+
+    .project-action-btn--primary:hover {
+      background: rgba(95, 158, 245, 0.95);
+      border-color: rgba(180, 215, 255, 0.65);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .project-hover {
+        transition: none;
+      }
     }
 
     .modal-btn {
@@ -645,21 +775,6 @@
     .modal-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-    }
-
-    .modal-close {
-      margin-top: 0.85rem;
-      width: 100%;
-      font-size: 0.8rem;
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.55);
-      cursor: pointer;
-      padding: 0.35rem;
-    }
-
-    .modal-close:hover {
-      color: #fff;
     }
 
     /* —— Contact —— */
@@ -973,19 +1088,23 @@
 </head>
 <body>
   <nav class="top-nav" aria-label="Main navigation">
-    <a href="index-en.html">Home EN</a>
-    <a href="index-zh.html">Home ZH</a>
-    <a href="devlog-en.html">Devlog EN</a>
-    <a href="devlog-zh.html">Devlog ZH</a>
-    <a href="devlog-01-en.html">Devlog 01 EN</a>
-    <a href="devlog-01-zh.html">Devlog 01 ZH</a>
-    <a href="devlog-02-en.html">Devlog 02 EN</a>
-    <a href="devlog-02-zh.html">Devlog 02 ZH</a>
+    <a class="top-nav__brand" href="#welcome" data-section-index="0"><span data-i18n="brand">IGNIS SOLARIS STUDIO</span></a>
+    <div class="top-nav__links">
+      <a class="top-nav__link" href="#projects" data-section-index="2" data-spy-target="projects" data-i18n="navProducts">我们的产品</a>
+      <a class="top-nav__link" href="#about" data-section-index="1" data-spy-target="about" data-i18n="navAbout">关于我们</a>
+      <a id="navStudioLog" class="top-nav__link top-nav__link--external" href="devlog-zh.html" data-i18n="navStudioLog">工作室手记</a>
+      <a class="top-nav__link" href="#contact" data-section-index="3" data-spy-target="contact" data-i18n="navContact">联系我们</a>
+      <span class="top-nav__lang" role="group" aria-label="语言 / Language">
+        <button type="button" class="top-nav__lang-btn" id="localeBtnEn" data-set-locale="en" aria-label="English">EN</button>
+        <span class="top-nav__lang-sep" aria-hidden="true">&nbsp;/&nbsp;</span>
+        <button type="button" class="top-nav__lang-btn" id="localeBtnZh" data-set-locale="zh" aria-label="中文">ZH</button>
+      </span>
+    </div>
   </nav>
 
   <main class="viewport">
     <div class="world-container" id="worldContainer">
-      <section class="showcase-section">
+      <section id="welcome" class="showcase-section showcase-section--welcome">
         <div class="welcome-stack">
           <h1>Ignis Solaris Studio</h1>
           <p>Forging worlds from a single spark.</p>
@@ -995,7 +1114,7 @@
           </div>
         </div>
       </section>
-      <section class="showcase-section showcase-section--about" aria-labelledby="about-heading">
+      <section id="about" class="showcase-section showcase-section--about" aria-labelledby="about-heading">
         <div class="projects-panel">
           <div class="projects-heading">
             <h2 id="about-heading" class="section-screen-title">About Us</h2>
@@ -1055,23 +1174,16 @@
           </div>
         </div>
       </section>
-      <section class="showcase-section showcase-section--projects" aria-labelledby="projects-heading">
+      <section id="projects" class="showcase-section showcase-section--projects" aria-labelledby="projects-heading">
         <div class="projects-panel">
           <div class="projects-heading">
             <h2 id="projects-heading" class="section-screen-title">Projects</h2>
           </div>
           <div class="project-grid" role="list">
-            <article
-              class="project-block"
-              role="listitem"
-              tabindex="0"
-              data-project-id="whale"
-              aria-haspopup="dialog"
-              aria-controls="projectModal"
-            >
+            <article class="project-block" role="listitem" tabindex="0">
               <div class="project-thumb" aria-hidden="true"></div>
               <div class="project-body">
-                <h3 class="project-title">《Let the Whale Breach》</h3>
+                <h3 class="project-title">Let the Whale Breach</h3>
                 <p class="project-desc">
                   A cozy, comforting pixel-art simulation game—a place to find calm, grow a community, and share gentle,
                   uplifting bonds with nature and the townsfolk.
@@ -1081,20 +1193,19 @@
                   <span class="project-tag">GDScript</span>
                   <span class="project-tag">RPG</span>
                 </div>
-                <p class="project-hint">Tap for actions</p>
+              </div>
+              <div class="project-hover" role="group" aria-label="项目操作">
+                <div class="project-hover__glass" aria-hidden="true"></div>
+                <div class="project-hover__actions">
+                  <a class="project-action-btn project-action-btn--primary" href="product-whale.html">查看详情</a>
+                  <a class="project-action-btn" href="devlog-whale.html">关注进度</a>
+                </div>
               </div>
             </article>
-            <article
-              class="project-block"
-              role="listitem"
-              tabindex="0"
-              data-project-id="island"
-              aria-haspopup="dialog"
-              aria-controls="projectModal"
-            >
+            <article class="project-block" role="listitem" tabindex="0">
               <div class="project-thumb" aria-hidden="true"></div>
               <div class="project-body">
-                <h3 class="project-title">《Take Care of Island》</h3>
+                <h3 class="project-title">Take Care of Island</h3>
                 <p class="project-desc">
                   A turn-based strategy simulation game with procedurally generated organ maps and dynamic physiological crisis interventions based on real metabolic systems.
                 </p>
@@ -1103,20 +1214,19 @@
                   <span class="project-tag">GDScript</span>
                   <span class="project-tag">Turn-Based Strategy</span>
                 </div>
-                <p class="project-hint">Tap for actions</p>
+              </div>
+              <div class="project-hover" role="group" aria-label="项目操作">
+                <div class="project-hover__glass" aria-hidden="true"></div>
+                <div class="project-hover__actions">
+                  <a class="project-action-btn project-action-btn--primary" href="product-island.html">查看详情</a>
+                  <a class="project-action-btn" href="devlog-island.html">关注进度</a>
+                </div>
               </div>
             </article>
-            <article
-              class="project-block"
-              role="listitem"
-              tabindex="0"
-              data-project-id="outflow"
-              aria-haspopup="dialog"
-              aria-controls="projectModal"
-            >
+            <article class="project-block" role="listitem" tabindex="0">
               <div class="project-thumb" aria-hidden="true"></div>
               <div class="project-body">
-                <h3 class="project-title">《OutFlow》</h3>
+                <h3 class="project-title">OutFlow</h3>
                 <p class="project-desc">
                   A lightweight long-form writing tool with a chat-based interface and local-first architecture.
                 </p>
@@ -1125,13 +1235,26 @@
                   <span class="project-tag">ChatUI</span>
                   <span class="project-tag">PWA</span>
                 </div>
-                <p class="project-hint">Tap for actions</p>
+              </div>
+              <div class="project-hover" role="group" aria-label="项目操作">
+                <div class="project-hover__glass" aria-hidden="true"></div>
+                <div class="project-hover__actions">
+                  <a class="project-action-btn project-action-btn--primary" href="product-outflow.html">查看详情</a>
+                  <a class="project-action-btn" href="devlog-outflow.html">关注进度</a>
+                  <a
+                    class="project-action-btn"
+                    href="https://ignissolarisstudio.com/OutFlow/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >打开 Web 应用</a
+                  >
+                </div>
               </div>
             </article>
           </div>
         </div>
       </section>
-      <section class="showcase-section showcase-section--contact" aria-labelledby="contact-heading">
+      <section id="contact" class="showcase-section showcase-section--contact" aria-labelledby="contact-heading">
         <div class="projects-panel">
           <div class="projects-heading">
             <h2 id="contact-heading" class="section-screen-title">Contact Me</h2>
@@ -1165,7 +1288,7 @@
                       <span class="contact-icon-wrap" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                       </span>
-                      多伦多，安省，加拿大
+                      Toronto, ON, Canada
                     </a>
                   </li>
                 </ul>
@@ -1231,26 +1354,6 @@
     </div>
   </main>
 
-  <div
-    class="project-modal-overlay"
-    id="projectModalOverlay"
-    aria-hidden="true"
-  >
-    <div
-      class="project-modal"
-      id="projectModal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="projectModalTitle"
-    >
-      <h3 id="projectModalTitle"></h3>
-      <p class="modal-desc" id="projectModalDesc"></p>
-      <p class="project-modal-status" id="projectModalStatus" hidden></p>
-      <div class="project-modal-actions" id="projectModalActions"></div>
-      <button type="button" class="modal-close" id="projectModalClose">Close</button>
-    </div>
-  </div>
-
   <div class="player-dock">
     <button type="button" class="nav-orb" id="navOrbLeft" aria-label="Previous screen" disabled>&larr;</button>
     <div class="player-character" id="playerCharacter"></div>
@@ -1265,6 +1368,28 @@
     const btnPressStart = document.getElementById("btnPressStart");
     const btnContactUs = document.getElementById("btnContactUs");
     const sectionCount = worldContainer.querySelectorAll(".showcase-section").length;
+    const SECTION_IDS = ["welcome", "about", "projects", "contact"];
+    const STUDIO_LOG_EN = "devlog-en.html";
+    const STUDIO_LOG_ZH = "devlog-zh.html";
+
+    const STRINGS = {
+      en: {
+        brand: "IGNIS SOLARIS STUDIO",
+        navProducts: "Our Products",
+        navAbout: "About Us",
+        navStudioLog: "Studio Field Notes",
+        navContact: "Contact",
+      },
+      zh: {
+        brand: "IGNIS SOLARIS STUDIO",
+        navProducts: "我们的产品",
+        navAbout: "关于我们",
+        navStudioLog: "工作室手记",
+        navContact: "联系我们",
+      },
+    };
+
+    const LOCALE_KEY = "iss-site-locale";
 
     let cameraX = 0;
     let maxCameraX = Math.max(0, sectionCount * window.innerWidth - window.innerWidth);
@@ -1276,6 +1401,7 @@
     const sectionScrollDurationMs = 1120;
     let autoScrollGeneration = 0;
     let autoScrollRaf = null;
+    let lastHashSyncedIndex = -1;
 
     function clamp(value, min, max) {
       return Math.min(max, Math.max(min, value));
@@ -1299,10 +1425,55 @@
       return clamp(Math.round(cameraX / w), 0, sectionCount - 1);
     }
 
+    function syncHashWithSectionIndex(sectionIndex) {
+      if (SECTION_IDS.length !== sectionCount) return;
+      const id = SECTION_IDS[clamp(sectionIndex, 0, sectionCount - 1)];
+      const nextHash = `#${id}`;
+      if (location.hash !== nextHash) {
+        history.replaceState(null, "", `${location.pathname}${location.search}${nextHash}`);
+      }
+    }
+
+    function updateNavSpy(sectionIndex) {
+      const idx = clamp(sectionIndex, 0, sectionCount - 1);
+      document.querySelectorAll(".top-nav__link[data-section-index]").forEach((link) => {
+        const n = parseInt(link.getAttribute("data-section-index"), 10);
+        const active = n === idx;
+        link.classList.toggle("is-active", active);
+        if (active) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    }
+
     function updateNavOrbState() {
       const i = getCurrentSectionIndex();
       navOrbLeft.disabled = i <= 0;
       navOrbRight.disabled = i >= sectionCount - 1;
+      updateNavSpy(i);
+      if (i !== lastHashSyncedIndex && SECTION_IDS.length === sectionCount) {
+        lastHashSyncedIndex = i;
+        syncHashWithSectionIndex(i);
+      }
+    }
+
+    function jumpToSection(sectionIndex, options) {
+      const opts = options || {};
+      const instant = !!opts.instant;
+      if (instant) {
+        cancelAutoScroll();
+      }
+      const idx = clamp(sectionIndex, 0, sectionCount - 1);
+      const targetX = idx * window.innerWidth;
+      if (instant || Math.abs(targetX - cameraX) < 1) {
+        cancelAutoScroll();
+        cameraX = targetX;
+        updateWorldPosition();
+        stopWalking();
+        lastHashSyncedIndex = -1;
+        updateNavOrbState();
+        return;
+      }
+      scrollToSection(idx);
     }
 
     function scrollToSection(sectionIndex) {
@@ -1433,6 +1604,85 @@
     bindOrbSectionNav(navOrbLeft, -1);
     bindOrbSectionNav(navOrbRight, 1);
 
+    function applyLocale(localeId) {
+      const loc = localeId === "en" ? "en" : "zh";
+      const pack = STRINGS[loc];
+      document.documentElement.lang = loc === "zh" ? "zh-CN" : "en";
+      try {
+        localStorage.setItem(LOCALE_KEY, loc);
+      } catch (_) {}
+
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const key = node.getAttribute("data-i18n");
+        if (key && pack[key] !== undefined) {
+          node.textContent = pack[key];
+        }
+      });
+
+      var studioLogNav = document.getElementById("navStudioLog");
+      if (studioLogNav) {
+        studioLogNav.href = loc === "en" ? STUDIO_LOG_EN : STUDIO_LOG_ZH;
+      }
+
+      var btnEn = document.getElementById("localeBtnEn");
+      var btnZh = document.getElementById("localeBtnZh");
+      if (btnEn) btnEn.classList.toggle("is-current", loc === "en");
+      if (btnZh) btnZh.classList.toggle("is-current", loc === "zh");
+    }
+
+    (function initLocale() {
+      var stored = null;
+      try {
+        stored = localStorage.getItem(LOCALE_KEY);
+      } catch (_) {}
+      applyLocale(stored === "en" ? "en" : "zh");
+    })();
+
+    document.getElementById("localeBtnEn")?.addEventListener("click", () => applyLocale("en"));
+    document.getElementById("localeBtnZh")?.addEventListener("click", () => applyLocale("zh"));
+
+    document.querySelector(".top-nav")?.addEventListener("click", (e) => {
+      if (e.target.closest(".top-nav__lang")) return;
+      const el = e.target.closest("[data-section-index]");
+      if (!el) return;
+      e.preventDefault();
+      const raw = el.getAttribute("data-section-index");
+      if (raw === null || raw === "") return;
+      const idx = parseInt(raw, 10);
+      if (Number.isNaN(idx)) return;
+      scrollToSection(idx);
+    });
+
+    function sectionIndexFromHash() {
+      var raw = (location.hash || "").replace(/^#/, "");
+      if (!raw) return 0;
+      var i = SECTION_IDS.indexOf(raw);
+      return i >= 0 ? i : -1;
+    }
+
+    function getStoredLocale() {
+      try {
+        return localStorage.getItem(LOCALE_KEY) === "en" ? "en" : "zh";
+      } catch (_) {
+        return "zh";
+      }
+    }
+
+    /** 旧的 #devlog 书签：跳到独立工作室手记页面 */
+    function redirectStudioLogHashIfNeeded() {
+      var raw = (location.hash || "").replace(/^#/, "");
+      if (raw !== "devlog") return false;
+      var target = getStoredLocale() === "en" ? STUDIO_LOG_EN : STUDIO_LOG_ZH;
+      window.location.replace(target);
+      return true;
+    }
+
+    window.addEventListener("hashchange", () => {
+      if (redirectStudioLogHashIfNeeded()) return;
+      var i = sectionIndexFromHash();
+      if (i >= 0) jumpToSection(i, { instant: true });
+    });
+
     btnPressStart.addEventListener("click", () => {
       scrollToSection(1);
     });
@@ -1456,10 +1706,22 @@
       maxCameraX = Math.max(0, sectionCount * window.innerWidth - window.innerWidth);
       cameraX = clamp(cameraX, 0, maxCameraX);
       updateWorldPosition();
+      lastHashSyncedIndex = -1;
       updateNavOrbState();
     });
 
-    updateNavOrbState();
+    (function applyInitialRoute() {
+      if (SECTION_IDS.length !== sectionCount) return;
+      if (redirectStudioLogHashIfNeeded()) return;
+      var i = sectionIndexFromHash();
+      if (i < 0) {
+        history.replaceState(null, "", `${location.pathname}${location.search}#welcome`);
+        i = 0;
+      } else if (!location.hash || location.hash === "#") {
+        history.replaceState(null, "", `${location.pathname}${location.search}#welcome`);
+      }
+      jumpToSection(i, { instant: true });
+    })();
 
     (function initAboutCarousel() {
       const slides = 3;
@@ -1490,115 +1752,6 @@
       });
       go(0);
     })();
-
-    const projectModalOverlay = document.getElementById("projectModalOverlay");
-    const projectModalTitle = document.getElementById("projectModalTitle");
-    const projectModalDesc = document.getElementById("projectModalDesc");
-    const projectModalStatus = document.getElementById("projectModalStatus");
-    const projectModalActions = document.getElementById("projectModalActions");
-    const projectModalClose = document.getElementById("projectModalClose");
-
-    const OUTFLOW_URL = "https://ignissolarisstudio.com/OutFlow/";
-
-    const projectCatalog = {
-      whale: {
-        title: "《Let the Whale Breach》",
-        desc:
-          "A cozy, comforting pixel-art simulation game—a place to find calm, grow a community, and share gentle, uplifting bonds with nature and the townsfolk.",
-        comingSoon: true,
-        liveUrl: "",
-        detailsUrl: "",
-      },
-      island: {
-        title: "《Take Care of Island》",
-        desc:
-          "A turn-based strategy simulation game with procedurally generated organ maps and dynamic physiological crisis interventions based on real metabolic systems.",
-        comingSoon: true,
-        liveUrl: "",
-        detailsUrl: "",
-      },
-      outflow: {
-        title: "《OutFlow》",
-        desc:
-          "A lightweight long-form writing tool with a chat-based interface and local-first architecture.",
-        comingSoon: false,
-        liveUrl: OUTFLOW_URL,
-        detailsUrl: OUTFLOW_URL,
-      },
-    };
-
-    let lastFocusedEl = null;
-
-    function buildModalActions(cfg) {
-      const liveHref = cfg.liveUrl || "#";
-      const detailsHref = cfg.detailsUrl || "#";
-      if (cfg.comingSoon) {
-        projectModalActions.innerHTML =
-          '<button type="button" class="modal-btn modal-btn--primary" disabled aria-disabled="true">Live Demo</button>' +
-          '<button type="button" class="modal-btn modal-btn--secondary" disabled aria-disabled="true">View Details</button>';
-        return;
-      }
-      projectModalActions.innerHTML =
-        `<a class="modal-btn modal-btn--primary" href="${liveHref}" target="_blank" rel="noopener noreferrer">Live Demo</a>` +
-        `<a class="modal-btn modal-btn--secondary" href="${detailsHref}" target="_blank" rel="noopener noreferrer">View Details</a>`;
-    }
-
-    function openProjectModal(projectId) {
-      const cfg = projectCatalog[projectId];
-      if (!cfg) return;
-
-      lastFocusedEl = document.activeElement;
-      projectModalTitle.textContent = cfg.title;
-      projectModalDesc.textContent = cfg.desc;
-      if (cfg.comingSoon) {
-        projectModalStatus.hidden = false;
-        projectModalStatus.textContent = "Coming soon — 敬请期待 · Interactive preview not available yet.";
-      } else {
-        projectModalStatus.hidden = true;
-        projectModalStatus.textContent = "";
-      }
-
-      buildModalActions(cfg);
-
-      projectModalOverlay.classList.add("is-open");
-      projectModalOverlay.setAttribute("aria-hidden", "false");
-      projectModalClose.focus();
-    }
-
-    function closeProjectModal() {
-      projectModalOverlay.classList.remove("is-open");
-      projectModalOverlay.setAttribute("aria-hidden", "true");
-      if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
-        lastFocusedEl.focus();
-      }
-    }
-
-    document.querySelectorAll(".project-block").forEach((block) => {
-      const open = () => {
-        const id = block.getAttribute("data-project-id");
-        if (id) openProjectModal(id);
-      };
-      block.addEventListener("click", open);
-      block.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          open();
-        }
-      });
-    });
-
-    projectModalClose.addEventListener("click", closeProjectModal);
-
-    projectModalOverlay.addEventListener("click", (e) => {
-      if (e.target === projectModalOverlay) closeProjectModal();
-    });
-
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && projectModalOverlay.classList.contains("is-open")) {
-        e.preventDefault();
-        closeProjectModal();
-      }
-    });
 
   </script>
 </body>

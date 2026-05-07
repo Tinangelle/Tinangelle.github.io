@@ -1,12 +1,1605 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Ignis Solaris Studio</title>
-  <meta http-equiv="refresh" content="0; url=index-en.html">
-  <link rel="canonical" href="index-en.html">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Side-Scrolling Portfolio</title>
+  <style>
+    :root {
+      --nav-height: 64px;
+      --sheet-cols: 4;
+      --sheet-rows: 4;
+      /* assets/Rabbit_sheet.png：180×256，4 列 × 4 行 */
+      --sheet-width: 180px;
+      --sheet-height: 256px;
+      --player-display-scale: 2;
+      --frame-width: calc(var(--sheet-width) / var(--sheet-cols));
+      --frame-height: calc(var(--sheet-height) / var(--sheet-rows));
+      --draw-frame-width: calc(var(--frame-width) * var(--player-display-scale));
+      --draw-frame-height: calc(var(--frame-height) * var(--player-display-scale));
+      --draw-sheet-width: calc(var(--sheet-width) * var(--player-display-scale));
+      --draw-sheet-height: calc(var(--sheet-height) * var(--player-display-scale));
+      --sprite-url: url("assets/Rabbit_sheet.png");
+      /* 第 2 行行走：向下偏移 1 个“放大后”的帧高 */
+      --walk-row-y: calc(-1 * var(--draw-frame-height));
+      /* 欢迎页工作室名与其它屏主标题共用 */
+      --hero-title-size: clamp(2.85rem, 7.5vw, 4.35rem);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #f5f5f5;
+      background: #121212;
+      overflow: hidden;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--nav-height);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.55);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #fff;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      transition: background 0.2s ease;
+    }
+
+    .top-nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      padding-top: var(--nav-height);
+    }
+
+    .world-container {
+      height: 100%;
+      display: flex;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .showcase-section {
+      width: 100vw;
+      height: calc(100vh - var(--nav-height));
+      flex: 0 0 100vw;
+      display: grid;
+      place-items: center;
+      font-size: clamp(1.2rem, 2.5vw, 2.1rem);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .showcase-section:first-child {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: clamp(1.5rem, 6vh, 3.75rem) 2rem calc(2.5rem + var(--draw-frame-height) * 0.72);
+      box-sizing: border-box;
+    }
+
+    .showcase-section:first-child > .welcome-stack {
+      flex: 1;
+      justify-content: center;
+      width: 100%;
+      min-height: 0;
+    }
+
+    .showcase-section:nth-child(1) { background: linear-gradient(130deg, #243b55, #141e30); }
+    .showcase-section:nth-child(2) { background: linear-gradient(130deg, #373b44, #4286f4); }
+    .showcase-section:nth-child(3) { background: linear-gradient(130deg, #0f2027, #2c5364); }
+    .showcase-section:nth-child(4) { background: linear-gradient(130deg, #232526, #414345); }
+
+    .welcome-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      width: 100%;
+      max-width: min(96vw, 52rem);
+      padding-inline: 0.25rem;
+      box-sizing: border-box;
+    }
+
+    .welcome-stack h1 {
+      /* 与全页标题同一上限，略放宽下限以便极窄屏仍单行不溢出 */
+      font-size: clamp(1.55rem, 7.5vw, 4.35rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: 1.12;
+      white-space: nowrap;
+      text-align: center;
+      max-width: 100%;
+    }
+
+    .section-screen-title {
+      font-size: var(--hero-title-size);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.12;
+      text-transform: uppercase;
+    }
+
+    .welcome-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 0.25rem;
+    }
+
+    .cta-btn {
+      font: inherit;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .cta-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      transform: translateY(-2px);
+    }
+
+    .cta-btn:active {
+      transform: translateY(0);
+    }
+
+    .cta-btn--ghost {
+      background: transparent;
+    }
+
+    .player-dock {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 40;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: max(12px, calc(var(--draw-frame-width) * 0.42));
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .player-dock > * {
+      pointer-events: auto;
+    }
+
+    .nav-orb {
+      width: 52px;
+      height: 52px;
+      margin-bottom: calc(var(--draw-frame-height) * 0.12);
+      padding: 0;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background: rgba(0, 0, 0, 0.2);
+      color: #fff;
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background 0.15s ease, opacity 0.15s ease, transform 0.1s ease;
+    }
+
+    .nav-orb:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .nav-orb:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    .nav-orb:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .player-character {
+      --facing: 1;
+      position: relative;
+      flex-shrink: 0;
+      width: var(--draw-frame-width);
+      height: var(--draw-frame-height);
+      z-index: 40;
+      background-image: var(--sprite-url);
+      background-repeat: no-repeat;
+      background-size: var(--draw-sheet-width) var(--draw-sheet-height);
+      background-position: 0 0;
+      image-rendering: pixelated;
+      transform: scaleX(var(--facing));
+      transform-origin: center;
+    }
+
+    .player-character.is-walking {
+      background-position-y: var(--walk-row-y);
+      animation: walk-cycle 0.6s steps(4) infinite;
+    }
+
+    .player-character.facing-left {
+      --facing: -1;
+    }
+
+    @keyframes walk-cycle {
+      from {
+        background-position: 0 var(--walk-row-y);
+      }
+      to {
+        /* 单行 4 帧横跨整张表宽度，steps(4) 逐帧切换 */
+        background-position: calc(-1 * var(--draw-sheet-width)) var(--walk-row-y);
+      }
+    }
+
+    /* —— Projects / About / Contact：标题+整块内容一起垂直居中 —— */
+    .showcase-section--projects,
+    .showcase-section--about,
+    .showcase-section--contact {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(2.5rem, 10vh, 6.5rem) 1rem calc(2rem + var(--draw-frame-height) * 0.5);
+      box-sizing: border-box;
+    }
+
+    /* —— About carousel —— */
+    .about-carousel {
+      width: 100%;
+      max-width: min(900px, 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    .about-carousel-stage {
+      display: flex;
+      align-items: stretch;
+      gap: clamp(0.5rem, 2vw, 1rem);
+      width: 100%;
+      min-height: clamp(220px, 32vh, 320px);
+    }
+
+    .about-carousel-arrow {
+      flex-shrink: 0;
+      align-self: center;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      background: rgba(0, 0, 0, 0.25);
+      color: #fff;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background 0.15s ease, opacity 0.15s ease, transform 0.1s ease;
+    }
+
+    .about-carousel-arrow:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .about-carousel-arrow:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    .about-carousel-arrow:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .about-carousel-viewport {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .about-carousel-track {
+      display: flex;
+      width: 300%;
+      height: 100%;
+      min-height: inherit;
+      transition: transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
+      will-change: transform;
+    }
+
+    .about-carousel-slide {
+      flex: 0 0 calc(100% / 3);
+      box-sizing: border-box;
+      padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 3vw, 2rem) clamp(1.5rem, 3.5vw, 2.25rem);
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      justify-content: center;
+      text-align: center;
+      min-height: inherit;
+    }
+
+    .about-slide-title {
+      font-size: clamp(1.5rem, 3.3vw, 1.875rem);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: none;
+      line-height: 1.35;
+      color: #fff;
+      margin: 0;
+    }
+
+    .about-slide-body {
+      font-size: clamp(1.29rem, 2.475vw, 1.5rem);
+      line-height: 1.62;
+      color: rgba(245, 245, 245, 0.9);
+      margin: 0;
+      max-width: 38rem;
+      margin-inline: auto;
+    }
+
+    .about-carousel-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .about-carousel-dot {
+      width: 10px;
+      height: 10px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.28);
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .about-carousel-dot:hover {
+      background: rgba(255, 255, 255, 0.48);
+    }
+
+    .about-carousel-dot.is-active {
+      background: rgba(120, 200, 255, 0.95);
+      transform: scale(1.15);
+    }
+
+    @media (max-width: 520px) {
+      .about-carousel-stage {
+        gap: 0.35rem;
+      }
+
+      .about-carousel-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.05rem;
+      }
+    }
+
+    .projects-panel {
+      width: min(1100px, 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(1.1rem, 2.75vh, 2rem);
+      text-align: left;
+    }
+
+    .projects-heading {
+      flex-shrink: 0;
+      text-align: center;
+      width: 100%;
+    }
+
+    .projects-heading .section-screen-title {
+      margin: 0;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      width: 100%;
+    }
+
+    @media (max-width: 840px) {
+      .project-grid {
+        grid-template-columns: 1fr;
+        max-width: 22rem;
+        margin: 0 auto;
+      }
+    }
+
+    .project-block {
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+      text-align: left;
+    }
+
+    .project-block:hover {
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .project-block:focus-visible {
+      outline: 2px solid rgba(120, 200, 255, 0.9);
+      outline-offset: 3px;
+    }
+
+    .project-thumb {
+      aspect-ratio: 16 / 10;
+      width: 100%;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.15)),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 11px,
+          rgba(255, 255, 255, 0.04) 11px,
+          rgba(255, 255, 255, 0.04) 12px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 11px,
+          rgba(255, 255, 255, 0.04) 11px,
+          rgba(255, 255, 255, 0.04) 12px
+        );
+      background-color: #1c2430;
+      position: relative;
+    }
+
+    .project-thumb::after {
+      content: "Preview";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    .project-body {
+      padding: 1rem 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .project-title {
+      font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+      font-weight: 700;
+      line-height: 1.3;
+      color: #fff;
+    }
+
+    .project-desc {
+      font-size: clamp(0.78rem, 1.35vw, 0.88rem);
+      line-height: 1.5;
+      color: rgba(245, 245, 245, 0.88);
+      flex: 1;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .project-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(100, 180, 255, 0.18);
+      border: 1px solid rgba(120, 190, 255, 0.35);
+      color: #c8e6ff;
+    }
+
+    .project-hint {
+      margin-top: 0.35rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    /* Modal */
+    .project-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    .project-modal-overlay.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .project-modal {
+      width: min(420px, 100%);
+      border-radius: 14px;
+      background: #1e242c;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+      padding: 1.35rem 1.4rem 1.25rem;
+      transform: translateY(12px);
+      transition: transform 0.22s ease;
+    }
+
+    .project-modal-overlay.is-open .project-modal {
+      transform: translateY(0);
+    }
+
+    .project-modal h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+
+    .project-modal .modal-desc {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: rgba(245, 245, 245, 0.88);
+      margin-bottom: 0.75rem;
+    }
+
+    .project-modal-status {
+      font-size: 0.8rem;
+      color: rgba(255, 200, 120, 0.95);
+      margin-bottom: 1rem;
+    }
+
+    .project-modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .modal-btn {
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.65rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .modal-btn--primary {
+      background: rgba(90, 160, 240, 0.35);
+      color: #fff;
+      border-color: rgba(140, 200, 255, 0.45);
+    }
+
+    .modal-btn--primary:hover:not(:disabled) {
+      background: rgba(110, 175, 250, 0.48);
+    }
+
+    .modal-btn--secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: #eee;
+    }
+
+    .modal-btn--secondary:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .modal-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .modal-close {
+      margin-top: 0.85rem;
+      width: 100%;
+      font-size: 0.8rem;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.55);
+      cursor: pointer;
+      padding: 0.35rem;
+    }
+
+    .modal-close:hover {
+      color: #fff;
+    }
+
+    /* —— Contact —— */
+    .showcase-section--contact .projects-panel {
+      width: min(48vw, 760px);
+      max-width: 100%;
+      gap: clamp(1.85rem, 3.5vh, 2.75rem);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1.65rem;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    /* 卡片略长于底部角色立绘（单帧显示高度），便于纵向排版 */
+    .contact-grid > .contact-card {
+      min-height: calc(var(--draw-frame-height) + 2.25rem);
+      height: 100%;
+    }
+
+    @media (max-width: 840px) {
+      .showcase-section--contact .projects-panel {
+        width: 100%;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .contact-card {
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.1rem 1.05rem 1.15rem;
+      gap: 0.65rem;
+      text-align: left;
+      min-height: 0;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .showcase-section--contact .project-title {
+      font-size: clamp(1.05rem, 1.65vw, 1.2rem);
+    }
+
+    .showcase-section--contact .project-desc {
+      font-size: clamp(0.9rem, 1.55vw, 1rem);
+    }
+
+    .showcase-section--contact .contact-details a {
+      font-size: clamp(0.9rem, 1.55vw, 1rem);
+    }
+
+    .showcase-section--contact .contact-icon-wrap {
+      width: 32px;
+      height: 32px;
+    }
+
+    .showcase-section--contact .contact-icon-wrap svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .showcase-section--contact .contact-social a {
+      width: 42px;
+      height: 42px;
+    }
+
+    .showcase-section--contact .contact-social a svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    .showcase-section--contact .contact-field label {
+      font-size: 0.82rem;
+    }
+
+    .showcase-section--contact .contact-field input,
+    .showcase-section--contact .contact-field textarea {
+      font-size: 0.95rem;
+      padding: 0.6rem 0.7rem;
+    }
+
+    .showcase-section--contact .contact-field--message {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .showcase-section--contact .contact-card--form textarea {
+      flex: 1 1 auto;
+      min-height: 7.5rem;
+    }
+
+    .showcase-section--contact .modal-btn {
+      font-size: 0.92rem;
+    }
+
+    .contact-hp {
+      position: absolute;
+      left: -6000px;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .contact-card:hover {
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .contact-details {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .contact-details a {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+      color: rgba(245, 245, 245, 0.95);
+      font-size: clamp(0.78rem, 1.35vw, 0.88rem);
+      line-height: 1.45;
+      transition: opacity 0.15s ease;
+    }
+
+    .contact-details a:hover {
+      opacity: 0.9;
+    }
+
+    .contact-icon-wrap {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: grid;
+      place-items: center;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .contact-icon-wrap svg {
+      width: 13px;
+      height: 13px;
+      display: block;
+    }
+
+    .contact-social {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: auto;
+      padding-top: 0.25rem;
+    }
+
+    .contact-social li {
+      margin: 0;
+      padding: 0;
+    }
+
+    .contact-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .contact-social a:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .contact-social a svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+      opacity: 0.95;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      flex: 1;
+    }
+
+    .contact-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .contact-field label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: rgba(245, 245, 245, 0.92);
+    }
+
+    .contact-field input,
+    .contact-field textarea {
+      font: inherit;
+      font-size: 0.88rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.2);
+      color: #f5f5f5;
+      outline: none;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .contact-field input::placeholder,
+    .contact-field textarea::placeholder {
+      color: rgba(245, 245, 245, 0.38);
+    }
+
+    .contact-field input:focus,
+    .contact-field textarea:focus {
+      border-color: rgba(140, 200, 255, 0.45);
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .contact-field textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .contact-form .modal-btn--primary {
+      margin-top: 0.15rem;
+      width: 100%;
+    }
+
+    .contact-card--touch {
+      gap: 0;
+    }
+
+    .contact-card--touch .project-title {
+      flex: 0 0 auto;
+      align-self: flex-start;
+      margin: 0 0 0.35rem;
+    }
+
+    .contact-touch-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 0.45rem;
+      min-height: 0;
+      width: 100%;
+    }
+
+    .contact-card--touch .project-desc {
+      flex: 0 0 auto;
+      margin: 0;
+      max-width: 100%;
+    }
+
+    .contact-card--touch .contact-details {
+      gap: 0.32rem;
+      width: 100%;
+    }
+
+    .contact-card--touch .contact-social {
+      width: 100%;
+      margin-top: auto;
+      padding-top: 0.65rem;
+    }
+
+    .contact-card--form {
+      position: relative;
+      gap: 0.65rem;
+    }
+
+    .contact-card--form .contact-form {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .contact-card--form .contact-form .modal-btn--primary {
+      margin-top: auto;
+      width: auto;
+      align-self: flex-start;
+    }
+  </style>
 </head>
 <body>
-  <p>Loading Ignis Solaris Studio... <a href="index-en.html">Click here to continue</a>.</p>
+  <nav class="top-nav" aria-label="Main navigation">
+    <a href="index-en.html">Home EN</a>
+    <a href="index-zh.html">Home ZH</a>
+    <a href="devlog-en.html">Devlog EN</a>
+    <a href="devlog-zh.html">Devlog ZH</a>
+    <a href="devlog-01-en.html">Devlog 01 EN</a>
+    <a href="devlog-01-zh.html">Devlog 01 ZH</a>
+    <a href="devlog-02-en.html">Devlog 02 EN</a>
+    <a href="devlog-02-zh.html">Devlog 02 ZH</a>
+  </nav>
+
+  <main class="viewport">
+    <div class="world-container" id="worldContainer">
+      <section class="showcase-section">
+        <div class="welcome-stack">
+          <h1>Ignis Solaris Studio</h1>
+          <p>Forging worlds from a single spark.</p>
+          <div class="welcome-actions">
+            <button type="button" class="cta-btn" id="btnPressStart">PRESS START</button>
+            <button type="button" class="cta-btn cta-btn--ghost" id="btnContactUs">CONTACT US</button>
+          </div>
+        </div>
+      </section>
+      <section class="showcase-section showcase-section--about" aria-labelledby="about-heading">
+        <div class="projects-panel">
+          <div class="projects-heading">
+            <h2 id="about-heading" class="section-screen-title">About Us</h2>
+          </div>
+          <div id="aboutCarousel" class="about-carousel" aria-roledescription="carousel" aria-live="polite">
+            <div class="about-carousel-stage">
+              <button
+                type="button"
+                class="about-carousel-arrow"
+                id="aboutCarouselPrev"
+                aria-controls="aboutCarouselTrack"
+                aria-label="Previous slide"
+              >
+                &#8592;
+              </button>
+              <div class="about-carousel-viewport">
+                <div class="about-carousel-track" id="aboutCarouselTrack">
+                  <article class="about-carousel-slide" aria-label="Studio introduction">
+                    <p class="about-slide-body">
+                      Ignis Solaris Studio is an independent game development studio creating immersive and engaging
+                      experiences.
+                    </p>
+                  </article>
+                  <article class="about-carousel-slide" aria-label="Our Studio slide">
+                    <h3 class="about-slide-title">Our Studio</h3>
+                    <p class="about-slide-body">
+                      Ignis Solaris Studio is a one-person game development studio based in Toronto. While it's a solo
+                      journey, it's fueled by the selfless encouragement of family and friends, and driven by the
+                      passion to forge countless wonderful worlds from every humble spark of inspiration.
+                    </p>
+                  </article>
+                  <article class="about-carousel-slide" aria-label="About Me slide">
+                    <h3 class="about-slide-title">About Me</h3>
+                    <p class="about-slide-body">
+                      I'm the founder of Ignis Solaris Studio—an indie studio grounded in psychology. Through narrative
+                      games, we offer gentle &ldquo;micro-healing&rdquo; for players facing universal loneliness and
+                      efficiency anxiety—small sanctuaries where you can feel unconditionally loved and cared for.
+                    </p>
+                  </article>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="about-carousel-arrow"
+                id="aboutCarouselNext"
+                aria-controls="aboutCarouselTrack"
+                aria-label="Next slide"
+              >
+                &#8594;
+              </button>
+            </div>
+            <div class="about-carousel-dots" role="tablist" aria-label="Carousel slides">
+              <button type="button" class="about-carousel-dot is-active" data-about-dot="0" aria-label="Go to slide 1" aria-current="true"></button>
+              <button type="button" class="about-carousel-dot" data-about-dot="1" aria-label="Go to slide 2" aria-current="false"></button>
+              <button type="button" class="about-carousel-dot" data-about-dot="2" aria-label="Go to slide 3" aria-current="false"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="showcase-section showcase-section--projects" aria-labelledby="projects-heading">
+        <div class="projects-panel">
+          <div class="projects-heading">
+            <h2 id="projects-heading" class="section-screen-title">Projects</h2>
+          </div>
+          <div class="project-grid" role="list">
+            <article
+              class="project-block"
+              role="listitem"
+              tabindex="0"
+              data-project-id="whale"
+              aria-haspopup="dialog"
+              aria-controls="projectModal"
+            >
+              <div class="project-thumb" aria-hidden="true"></div>
+              <div class="project-body">
+                <h3 class="project-title">《Let the Whale Breach》</h3>
+                <p class="project-desc">
+                  A cozy, comforting pixel-art simulation game—a place to find calm, grow a community, and share gentle,
+                  uplifting bonds with nature and the townsfolk.
+                </p>
+                <div class="project-tags" aria-label="Technologies">
+                  <span class="project-tag">Godot</span>
+                  <span class="project-tag">GDScript</span>
+                  <span class="project-tag">RPG</span>
+                </div>
+                <p class="project-hint">Tap for actions</p>
+              </div>
+            </article>
+            <article
+              class="project-block"
+              role="listitem"
+              tabindex="0"
+              data-project-id="island"
+              aria-haspopup="dialog"
+              aria-controls="projectModal"
+            >
+              <div class="project-thumb" aria-hidden="true"></div>
+              <div class="project-body">
+                <h3 class="project-title">《Take Care of Island》</h3>
+                <p class="project-desc">
+                  A turn-based strategy simulation game with procedurally generated organ maps and dynamic physiological crisis interventions based on real metabolic systems.
+                </p>
+                <div class="project-tags" aria-label="Technologies">
+                  <span class="project-tag">Godot</span>
+                  <span class="project-tag">GDScript</span>
+                  <span class="project-tag">Turn-Based Strategy</span>
+                </div>
+                <p class="project-hint">Tap for actions</p>
+              </div>
+            </article>
+            <article
+              class="project-block"
+              role="listitem"
+              tabindex="0"
+              data-project-id="outflow"
+              aria-haspopup="dialog"
+              aria-controls="projectModal"
+            >
+              <div class="project-thumb" aria-hidden="true"></div>
+              <div class="project-body">
+                <h3 class="project-title">《OutFlow》</h3>
+                <p class="project-desc">
+                  A lightweight long-form writing tool with a chat-based interface and local-first architecture.
+                </p>
+                <div class="project-tags" aria-label="Technologies">
+                  <span class="project-tag">WritingTool</span>
+                  <span class="project-tag">ChatUI</span>
+                  <span class="project-tag">PWA</span>
+                </div>
+                <p class="project-hint">Tap for actions</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="showcase-section showcase-section--contact" aria-labelledby="contact-heading">
+        <div class="projects-panel">
+          <div class="projects-heading">
+            <h2 id="contact-heading" class="section-screen-title">Contact Me</h2>
+          </div>
+          <div class="contact-grid">
+            <div class="contact-card contact-card--touch" aria-labelledby="contact-touch-title">
+              <h3 id="contact-touch-title" class="project-title">Get In Touch</h3>
+              <div class="contact-touch-main">
+                <p class="project-desc">
+                  For strategic partnerships, co-development, or investment discussions aligned with our projects and roadmap, please reach out. We welcome qualified inquiries and are happy to explore fit and next steps in a professional context.
+                </p>
+                <ul class="contact-details">
+                  <li>
+                    <a href="mailto:jade.x.du@gmail.com">
+                      <span class="contact-icon-wrap" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                      </span>
+                      jade.x.du@gmail.com
+                    </a>
+                  </li>
+                  <li>
+                    <a href="tel:+15149639277">
+                      <span class="contact-icon-wrap" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                      </span>
+                      +1 (514) 963-9277
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://maps.google.com/?q=Toronto%2C+ON%2C+Canada" target="_blank" rel="noopener noreferrer">
+                      <span class="contact-icon-wrap" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      </span>
+                      多伦多，安省，加拿大
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <ul class="contact-social" aria-label="Social media">
+                <li>
+                  <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="contact-card contact-card--form">
+              <h3 class="project-title" id="contact-form-title">Send Message</h3>
+              <form
+                id="contactForm"
+                class="contact-form"
+                aria-labelledby="contact-form-title"
+                action="https://formsubmit.co/jade.x.du@gmail.com"
+                method="post"
+              >
+                <input type="hidden" name="_subject" value="[Ignis Solaris] Website contact" />
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="_next" id="contactFormNext" value="" />
+                <p class="contact-hp" aria-hidden="true">
+                  <label for="contact-hp-field">Leave blank</label>
+                  <input type="text" id="contact-hp-field" name="_honey" tabindex="-1" autocomplete="off" />
+                </p>
+                <div class="contact-field">
+                  <label for="contact-name">Name</label>
+                  <input id="contact-name" name="name" type="text" autocomplete="name" required placeholder="Your name" />
+                </div>
+                <div class="contact-field">
+                  <label for="contact-email">Email</label>
+                  <input id="contact-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+                </div>
+                <div class="contact-field contact-field--message">
+                  <label for="contact-message">Message</label>
+                  <textarea id="contact-message" name="message" required placeholder="Briefly describe your inquiry…"></textarea>
+                </div>
+                <button type="submit" class="modal-btn modal-btn--primary">Send Message</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div
+    class="project-modal-overlay"
+    id="projectModalOverlay"
+    aria-hidden="true"
+  >
+    <div
+      class="project-modal"
+      id="projectModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="projectModalTitle"
+    >
+      <h3 id="projectModalTitle"></h3>
+      <p class="modal-desc" id="projectModalDesc"></p>
+      <p class="project-modal-status" id="projectModalStatus" hidden></p>
+      <div class="project-modal-actions" id="projectModalActions"></div>
+      <button type="button" class="modal-close" id="projectModalClose">Close</button>
+    </div>
+  </div>
+
+  <div class="player-dock">
+    <button type="button" class="nav-orb" id="navOrbLeft" aria-label="Previous screen" disabled>&larr;</button>
+    <div class="player-character" id="playerCharacter"></div>
+    <button type="button" class="nav-orb" id="navOrbRight" aria-label="Next screen">&rarr;</button>
+  </div>
+
+  <script>
+    const worldContainer = document.getElementById("worldContainer");
+    const playerCharacter = document.getElementById("playerCharacter");
+    const navOrbLeft = document.getElementById("navOrbLeft");
+    const navOrbRight = document.getElementById("navOrbRight");
+    const btnPressStart = document.getElementById("btnPressStart");
+    const btnContactUs = document.getElementById("btnContactUs");
+    const sectionCount = worldContainer.querySelectorAll(".showcase-section").length;
+
+    let cameraX = 0;
+    let maxCameraX = Math.max(0, sectionCount * window.innerWidth - window.innerWidth);
+    let walkTimer = null;
+    let rafId = null;
+    const pressedKeys = new Set();
+    const baseSpeed = 8;
+    /** 程序化跳转（欢迎区按钮、左右圆钮）动画时长；数值越大越慢 */
+    const sectionScrollDurationMs = 1120;
+    let autoScrollGeneration = 0;
+    let autoScrollRaf = null;
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function cancelAutoScroll() {
+      autoScrollGeneration += 1;
+      if (autoScrollRaf !== null) {
+        cancelAnimationFrame(autoScrollRaf);
+        autoScrollRaf = null;
+      }
+    }
+
+    function updateWorldPosition() {
+      worldContainer.style.transform = `translate3d(${-cameraX}px, 0, 0)`;
+    }
+
+    function getCurrentSectionIndex() {
+      const w = window.innerWidth;
+      if (w <= 0) return 0;
+      return clamp(Math.round(cameraX / w), 0, sectionCount - 1);
+    }
+
+    function updateNavOrbState() {
+      const i = getCurrentSectionIndex();
+      navOrbLeft.disabled = i <= 0;
+      navOrbRight.disabled = i >= sectionCount - 1;
+    }
+
+    function scrollToSection(sectionIndex) {
+      const targetX = clamp(sectionIndex, 0, sectionCount - 1) * window.innerWidth;
+      const startX = cameraX;
+      const delta = targetX - startX;
+      if (Math.abs(delta) < 1) {
+        updateNavOrbState();
+        return;
+      }
+
+      cancelAutoScroll();
+      const generation = autoScrollGeneration;
+      const duration = sectionScrollDurationMs;
+      const t0 = performance.now();
+
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      function tick(now) {
+        if (generation !== autoScrollGeneration) return;
+        const t = Math.min(1, (now - t0) / duration);
+        const eased = easeOutCubic(t);
+        cameraX = startX + delta * eased;
+        updateWorldPosition();
+        startWalking(delta > 0 ? 1 : -1);
+        updateNavOrbState();
+        if (t < 1) {
+          autoScrollRaf = requestAnimationFrame(tick);
+        } else {
+          cameraX = targetX;
+          updateWorldPosition();
+          stopWalking();
+          updateNavOrbState();
+          autoScrollRaf = null;
+        }
+      }
+
+      autoScrollRaf = requestAnimationFrame(tick);
+    }
+
+    function startWalking(direction) {
+      playerCharacter.classList.add("is-walking");
+      playerCharacter.classList.toggle("facing-left", direction < 0);
+    }
+
+    function stopWalking() {
+      playerCharacter.classList.remove("is-walking");
+    }
+
+    function moveWorld(delta) {
+      if (delta === 0) return;
+
+      const prevX = cameraX;
+      cameraX = clamp(cameraX + delta, 0, maxCameraX);
+
+      if (cameraX !== prevX) {
+        updateWorldPosition();
+        startWalking(delta < 0 ? -1 : 1);
+        updateNavOrbState();
+      }
+    }
+
+    function step() {
+      let delta = 0;
+      if (pressedKeys.has("ArrowRight")) delta += baseSpeed;
+      if (pressedKeys.has("ArrowLeft")) delta -= baseSpeed;
+
+      moveWorld(delta);
+
+      if (pressedKeys.size === 0) {
+        stopWalking();
+        rafId = null;
+        return;
+      }
+
+      rafId = requestAnimationFrame(step);
+    }
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+
+      event.preventDefault();
+      cancelAutoScroll();
+      pressedKeys.add(event.key);
+
+      if (!rafId) {
+        rafId = requestAnimationFrame(step);
+      }
+    });
+
+    window.addEventListener("keyup", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      pressedKeys.delete(event.key);
+    });
+
+    window.addEventListener(
+      "wheel",
+      (event) => {
+        const dominantDelta =
+          Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+
+        if (dominantDelta === 0) return;
+
+        event.preventDefault();
+        cancelAutoScroll();
+        moveWorld(dominantDelta * 0.75);
+
+        clearTimeout(walkTimer);
+        walkTimer = setTimeout(() => {
+          if (pressedKeys.size === 0) {
+            stopWalking();
+          }
+        }, 110);
+      },
+      { passive: false }
+    );
+
+    function bindOrbSectionNav(orb, delta) {
+      orb.addEventListener("click", () => {
+        if (orb.disabled) return;
+        const next = getCurrentSectionIndex() + delta;
+        scrollToSection(next);
+      });
+    }
+
+    bindOrbSectionNav(navOrbLeft, -1);
+    bindOrbSectionNav(navOrbRight, 1);
+
+    btnPressStart.addEventListener("click", () => {
+      scrollToSection(1);
+    });
+
+    btnContactUs.addEventListener("click", () => {
+      scrollToSection(sectionCount - 1);
+    });
+
+    const contactFormNext = document.getElementById("contactFormNext");
+    if (contactFormNext) {
+      try {
+        const u = new URL(window.location.href);
+        u.hash = "";
+        contactFormNext.value = u.toString();
+      } catch (_) {
+        contactFormNext.value = window.location.href.split("#")[0];
+      }
+    }
+
+    window.addEventListener("resize", () => {
+      maxCameraX = Math.max(0, sectionCount * window.innerWidth - window.innerWidth);
+      cameraX = clamp(cameraX, 0, maxCameraX);
+      updateWorldPosition();
+      updateNavOrbState();
+    });
+
+    updateNavOrbState();
+
+    (function initAboutCarousel() {
+      const slides = 3;
+      const track = document.getElementById("aboutCarouselTrack");
+      const prevBtn = document.getElementById("aboutCarouselPrev");
+      const nextBtn = document.getElementById("aboutCarouselNext");
+      const dots = document.querySelectorAll("[data-about-dot]");
+      if (!track || !prevBtn || !nextBtn || dots.length === 0) return;
+
+      let index = 0;
+
+      function go(nextIndex) {
+        index = clamp(nextIndex, 0, slides - 1);
+        track.style.transform = `translateX(calc(-100% * ${index} / ${slides}))`;
+        prevBtn.disabled = index <= 0;
+        nextBtn.disabled = index >= slides - 1;
+        dots.forEach((dot, i) => {
+          const active = i === index;
+          dot.classList.toggle("is-active", active);
+          dot.setAttribute("aria-current", active ? "true" : "false");
+        });
+      }
+
+      prevBtn.addEventListener("click", () => go(index - 1));
+      nextBtn.addEventListener("click", () => go(index + 1));
+      dots.forEach((dot, i) => {
+        dot.addEventListener("click", () => go(i));
+      });
+      go(0);
+    })();
+
+    const projectModalOverlay = document.getElementById("projectModalOverlay");
+    const projectModalTitle = document.getElementById("projectModalTitle");
+    const projectModalDesc = document.getElementById("projectModalDesc");
+    const projectModalStatus = document.getElementById("projectModalStatus");
+    const projectModalActions = document.getElementById("projectModalActions");
+    const projectModalClose = document.getElementById("projectModalClose");
+
+    const OUTFLOW_URL = "https://ignissolarisstudio.com/OutFlow/";
+
+    const projectCatalog = {
+      whale: {
+        title: "《Let the Whale Breach》",
+        desc:
+          "A cozy, comforting pixel-art simulation game—a place to find calm, grow a community, and share gentle, uplifting bonds with nature and the townsfolk.",
+        comingSoon: true,
+        liveUrl: "",
+        detailsUrl: "",
+      },
+      island: {
+        title: "《Take Care of Island》",
+        desc:
+          "A turn-based strategy simulation game with procedurally generated organ maps and dynamic physiological crisis interventions based on real metabolic systems.",
+        comingSoon: true,
+        liveUrl: "",
+        detailsUrl: "",
+      },
+      outflow: {
+        title: "《OutFlow》",
+        desc:
+          "A lightweight long-form writing tool with a chat-based interface and local-first architecture.",
+        comingSoon: false,
+        liveUrl: OUTFLOW_URL,
+        detailsUrl: OUTFLOW_URL,
+      },
+    };
+
+    let lastFocusedEl = null;
+
+    function buildModalActions(cfg) {
+      const liveHref = cfg.liveUrl || "#";
+      const detailsHref = cfg.detailsUrl || "#";
+      if (cfg.comingSoon) {
+        projectModalActions.innerHTML =
+          '<button type="button" class="modal-btn modal-btn--primary" disabled aria-disabled="true">Live Demo</button>' +
+          '<button type="button" class="modal-btn modal-btn--secondary" disabled aria-disabled="true">View Details</button>';
+        return;
+      }
+      projectModalActions.innerHTML =
+        `<a class="modal-btn modal-btn--primary" href="${liveHref}" target="_blank" rel="noopener noreferrer">Live Demo</a>` +
+        `<a class="modal-btn modal-btn--secondary" href="${detailsHref}" target="_blank" rel="noopener noreferrer">View Details</a>`;
+    }
+
+    function openProjectModal(projectId) {
+      const cfg = projectCatalog[projectId];
+      if (!cfg) return;
+
+      lastFocusedEl = document.activeElement;
+      projectModalTitle.textContent = cfg.title;
+      projectModalDesc.textContent = cfg.desc;
+      if (cfg.comingSoon) {
+        projectModalStatus.hidden = false;
+        projectModalStatus.textContent = "Coming soon — 敬请期待 · Interactive preview not available yet.";
+      } else {
+        projectModalStatus.hidden = true;
+        projectModalStatus.textContent = "";
+      }
+
+      buildModalActions(cfg);
+
+      projectModalOverlay.classList.add("is-open");
+      projectModalOverlay.setAttribute("aria-hidden", "false");
+      projectModalClose.focus();
+    }
+
+    function closeProjectModal() {
+      projectModalOverlay.classList.remove("is-open");
+      projectModalOverlay.setAttribute("aria-hidden", "true");
+      if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
+        lastFocusedEl.focus();
+      }
+    }
+
+    document.querySelectorAll(".project-block").forEach((block) => {
+      const open = () => {
+        const id = block.getAttribute("data-project-id");
+        if (id) openProjectModal(id);
+      };
+      block.addEventListener("click", open);
+      block.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          open();
+        }
+      });
+    });
+
+    projectModalClose.addEventListener("click", closeProjectModal);
+
+    projectModalOverlay.addEventListener("click", (e) => {
+      if (e.target === projectModalOverlay) closeProjectModal();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && projectModalOverlay.classList.contains("is-open")) {
+        e.preventDefault();
+        closeProjectModal();
+      }
+    });
+
+  </script>
 </body>
 </html>

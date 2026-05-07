@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Studio Field Notes - Ignis Solaris Studio</title>
+  <script src="i18n.js"></script>
+  <link rel="stylesheet" href="devlog-list.css" />
+</head>
+<body data-page="devlog">
+  <nav class="top-nav" aria-label="Main navigation">
+    <a class="top-nav__brand" href="index.html#welcome"><span data-i18n="brand">IGNIS SOLARIS STUDIO</span></a>
+    <div class="top-nav__links">
+      <a class="top-nav__link" href="index.html#projects" data-i18n="navProducts">Our Products</a>
+      <a class="top-nav__link" href="index.html#about" data-i18n="navAbout">About Us</a>
+      <a id="navStudioLog" class="top-nav__link is-active" href="devlog.html" aria-current="page" data-i18n="navStudioLog">Studio Field Notes</a>
+      <a class="top-nav__link" href="index.html#contact" data-i18n="navContact">Contact</a>
+      <span class="top-nav__lang" role="group" aria-label="语言 / Language">
+        <button type="button" class="top-nav__lang-btn" id="localeBtnEn" data-set-locale="en" aria-label="English">EN</button>
+        <span class="top-nav__lang-sep" aria-hidden="true">&nbsp;/&nbsp;</span>
+        <button type="button" class="top-nav__lang-btn" id="localeBtnZh" data-set-locale="zh" aria-label="中文">中文</button>
+        <span class="top-nav__lang-sep" aria-hidden="true">&nbsp;/&nbsp;</span>
+        <button type="button" class="top-nav__lang-btn" id="localeBtnFr" data-set-locale="fr" aria-label="Français">FR</button>
+      </span>
+    </div>
+  </nav>
+  <main class="devlog-page">
+    <section class="devlog-hero">
+      <h1 class="devlog-heading" data-i18n="devlogHeading">Development Log</h1>
+      <p class="devlog-subtitle" data-i18n="devlogIntro">Studio progress notes, design iterations, and milestone snapshots from the long road of game development.</p>
+    </section>
+    <section class="devlog-layout" aria-labelledby="devlog-timeline-title">
+      <aside class="devlog-timeline">
+        <h2 id="devlog-timeline-title" class="devlog-timeline__title" data-i18n="devlogTimelineTitle">Timeline</h2>
+        <ol class="devlog-timeline__list" id="devlogTimelineList"></ol>
+      </aside>
+      <div class="devlog-content" id="devlogContentList"></div>
+    </section>
+    <footer class="devlog-footer"><p data-i18n="devlogFooter">&copy; 2025 Ignis Solaris Studio. All rights reserved.</p></footer>
+  </main>
+  <script src="devlog-list.js"></script>
+</body>
+</html>

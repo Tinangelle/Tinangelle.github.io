@@ -1,97 +1,73 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Back to Thawing Valley - Devlog #2</title>
-	<link rel="stylesheet" href="style.css"> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Back to Thawing Valley - Devlog #2</title>
+  <link rel="stylesheet" href="devlog-article.css" />
 </head>
 <body>
-	<header>
-		<nav>
-			<a href="index-zh.html" class="logo">IGNIS SOLARIS STUDIO</a>
-			<ul>
-				<li><a href="index-zh.html#games">我们的游戏</a></li>
-				<li><a href="index-zh.html#about">关于我们</a></li>
-				<li><a href="devlog-zh.html">开发日志</a></li>
-				<li><a href="index-zh.html#contact">联系</a></li>
-				<li class="lang-switcher">
-					<a href="devlog-02-en.html">EN</a>
-					<span>/</span>
-					<a href="devlog-02-zh.html" class="active">ZH</a>
-				</li>
-			</ul>
-		</nav>
-	</header>
-
-	<main class="container">
-		<article>
-			<h1>Devlog #2: 欢迎来到“出生地”——会呼吸的捏人系统</h1>
-			
-			<p>大家好！《Back to Thawing Valley》的 Devlog #2 终于来了！</p>
-			
-			<p>在过去的几周里，我们集中火力完成了一个至关重要的系统：<strong>角色的“出生地”</strong>——多页捏人系统 (<code>PlayerSetup.tscn</code>)。</p>
-			
-			<p>我们希望它不只是一个功能，而是更像在翻阅一本关于你自己的书，开启你在山谷的故事序章。</p>
-			
-			<img src="devlog2/全功能展示.gif" alt="Devlog 2 全功能概览 GIF">
-			
-			<p>目前，外观页（Page 1）的功能已经敲定。我们未来计划逐步扩充更多的服装和外观选项！</p>
-
-			<h3>核心交互</h3>
-			<p>这一版捏人系统的核心是让 UI 变得更“智能”。在问卷页，你可以自由选择你的“家人”，无论你们是否有血缘。</p>
-			
-			<p>当然啦，<strong>我们也没忘记独狼玩家</strong>！</p>
-			
-			<p>如果你选择不邀请任何人...系统会“读懂”你的选择，并给你一个特殊的反馈。我们希望通过这些小细节让交互变得更有温度。</p>
-			
-			<img src="devlog2/邀请.gif" alt="Devlog 2 “独狼”反馈 GIF">
-
-			<h3>风味与沉浸感：你的独特性</h3>
-			<p>我们加入了许多“风味”问题，希望能照顾到每个人的独特性。</p>
-			
-			<p>也许你更喜欢<strong>深夜钓鱼</strong>，而不是清晨耕种？</p>
-			
-			<img src="devlog2/生物钟.png" alt="Devlog 2 生物钟截图">
-
-			<p>另外，希望你喜欢钓鱼 >_< </p>
-			
-			<img src="devlog2/钓鱼.gif" alt="Devlog 2 (钓鱼 GIF)">
-			
-			<p>让我们知道你的生日，也许在山谷里会有人给你悄悄送上礼物呢！</p>
-			
-			<img src="devlog2/生日.png" alt="Devlog 2 生日截图">
-
-			<h3>仍在摸索的美术...</h3>
-			<p>除了代码，我也在努力提升游戏的美术风格！</p>
-			
-			<p>虽然还拿不出手，但也想分享一下最近画的两张练习图。它们不一定会出现在最终游戏中，但希望能看到自己的进步！</p>
-			
-			<img src="devlog2/法师塔.JPEG" alt="美术练习 1 (法师塔)">
-			<img src="devlog2/外楼梯.JPEG" alt="美术练习 2 (外楼梯)">
-
-			<h3>技术与打磨</h3>
-			<p>当然，这个冲刺也伴随着大量的 Bug 修复和底层优化。</p>
-			
-			<p>我们重构了 UI 布局，彻底解决了 F6 预览时的<strong>相机 <code>current</code> 属性覆盖问题</strong>（之前称为“相机偏移 Bug”），并优化了场景树的渲染顺序，修复了按钮在 <code>NinePatchRect</code> (书本背景)下无法被点击的遮挡问题。</p>
-			
-			<p>虽然这些都是玩家看不见的工作，但它们是保证系统流畅运行的基础。</p>
-
-			<h3>下一步：开垦！</h3>
-			<p>随着捏人系统的核心功能尘埃落定，我们终于可以踏入山谷，开始实现真正的游戏循环了！</p>
-			
-			<p>下一个冲刺（Devlog #3）的目标是：<br>
-			<strong>让玩家可以挥动锄头，并播下第一颗种子！</strong></p>
-			
-			<p>感谢你的关注，我们下次见！</p>
-		</article>
-	</main>
-
-	<footer>
- 		<div class="social-links">
-            <a href="https://github.com/Tinangelle" target="_blank" rel="noopener noreferrer" title="GitHub Profile">GitHub</a>
-        </div>
-        <p>&copy; 2025 Ignis Solaris Studio. All rights reserved.</p>
-    </footer>
+  <nav class="top-nav" aria-label="Main navigation">
+    <a class="top-nav__brand" href="index.html#welcome">IGNIS SOLARIS STUDIO</a>
+    <div class="top-nav__links">
+      <a class="top-nav__link" href="index.html#projects">我们的产品</a>
+      <a class="top-nav__link" href="index.html#about">关于我们</a>
+      <a class="top-nav__link is-active" href="devlog.html?lang=zh">工作室手记</a>
+      <a class="top-nav__link" href="index.html#contact">联系</a>
+      <span class="top-nav__lang" role="group" aria-label="语言">
+        <a class="top-nav__lang-link" href="devlog-02-en.html">EN</a>
+        <span class="top-nav__lang-sep">/</span>
+        <a class="top-nav__lang-link is-current" href="devlog-02-zh.html">ZH</a>
+        <span class="top-nav__lang-sep">/</span>
+        <a class="top-nav__lang-link" href="devlog-02-fr.html">FR</a>
+      </span>
+    </div>
+  </nav>
+  <main class="article-page">
+    <article class="article-card">
+      <a class="article-back-link" href="devlog.html?lang=zh">&#8592; 返回开发日志页</a>
+      <nav class="article-pager" aria-label="文章导航">
+        <a class="article-pager__link" href="devlog-01-zh.html">← 上一篇</a>
+        <span class="article-pager__link article-pager__link--disabled">下一篇 →</span>
+      </nav>
+      <h1>Devlog #2: 欢迎来到“出生地”——会呼吸的捏人系统</h1>
+      <p>大家好！《Back to Thawing Valley》的 Devlog #2 终于来了！</p>
+      <p>在过去的几周里，我们集中火力完成了一个至关重要的系统：<strong>角色的“出生地”</strong>——多页捏人系统 (<code>PlayerSetup.tscn</code>)。</p>
+      <p>我们希望它不只是一个功能，而是更像在翻阅一本关于你自己的书，开启你在山谷的故事序章。</p>
+      <img src="devlog2/全功能展示.gif" alt="Devlog 2 全功能概览 GIF" />
+      <p>目前，外观页（Page 1）的功能已经敲定。我们未来计划逐步扩充更多的服装和外观选项！</p>
+      <h3>核心交互</h3>
+      <p>这一版捏人系统的核心是让 UI 变得更“智能”。在问卷页，你可以自由选择你的“家人”，无论你们是否有血缘。</p>
+      <p>当然啦，<strong>我们也没忘记独狼玩家</strong>！</p>
+      <p>如果你选择不邀请任何人...系统会“读懂”你的选择，并给你一个特殊的反馈。我们希望通过这些小细节让交互变得更有温度。</p>
+      <img src="devlog2/邀请.gif" alt="Devlog 2 独狼反馈 GIF" />
+      <h3>风味与沉浸感：你的独特性</h3>
+      <p>我们加入了许多“风味”问题，希望能照顾到每个人的独特性。</p>
+      <p>也许你更喜欢<strong>深夜钓鱼</strong>，而不是清晨耕种？</p>
+      <img src="devlog2/生物钟.png" alt="Devlog 2 生物钟截图" />
+      <p>另外，希望你喜欢钓鱼 &gt;_&lt;</p>
+      <img src="devlog2/钓鱼.gif" alt="Devlog 2 钓鱼 GIF" />
+      <p>让我们知道你的生日，也许在山谷里会有人给你悄悄送上礼物呢！</p>
+      <img src="devlog2/生日.png" alt="Devlog 2 生日截图" />
+      <h3>仍在摸索的美术...</h3>
+      <p>除了代码，我也在努力提升游戏的美术风格！</p>
+      <p>虽然还拿不出手，但也想分享一下最近画的两张练习图。它们不一定会出现在最终游戏中，但希望能看到自己的进步！</p>
+      <img src="devlog2/法师塔.JPEG" alt="美术练习 1 (法师塔)" />
+      <img src="devlog2/外楼梯.JPEG" alt="美术练习 2 (外楼梯)" />
+      <h3>技术与打磨</h3>
+      <p>当然，这个冲刺也伴随着大量的 Bug 修复和底层优化。</p>
+      <p>我们重构了 UI 布局，彻底解决了 F6 预览时的<strong>相机 <code>current</code> 属性覆盖问题</strong>（之前称为“相机偏移 Bug”），并优化了场景树的渲染顺序，修复了按钮在 <code>NinePatchRect</code> (书本背景)下无法被点击的遮挡问题。</p>
+      <p>虽然这些都是玩家看不见的工作，但它们是保证系统流畅运行的基础。</p>
+      <h3>下一步：开垦！</h3>
+      <p>随着捏人系统的核心功能尘埃落定，我们终于可以踏入山谷，开始实现真正的游戏循环了！</p>
+      <p>下一个冲刺（Devlog #3）的目标是：<br /><strong>让玩家可以挥动锄头，并播下第一颗种子！</strong></p>
+      <p>感谢你的关注，我们下次见！</p>
+      <nav class="article-pager" aria-label="文章导航">
+        <a class="article-pager__link" href="devlog-01-zh.html">← 上一篇</a>
+        <span class="article-pager__link article-pager__link--disabled">下一篇 →</span>
+      </nav>
+    </article>
+    <footer class="article-footer">&copy; 2025 Ignis Solaris Studio. All rights reserved.</footer>
+  </main>
 </body>
 </html>

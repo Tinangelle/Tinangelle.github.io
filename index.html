@@ -303,6 +303,20 @@
       pointer-events: auto;
     }
 
+    .asset-placeholder-note {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 45;
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.3;
+      color: rgba(255, 255, 255, 0.4);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
     .nav-orb {
       width: 52px;
       height: 52px;
@@ -1349,6 +1363,7 @@
     <div class="player-character" id="playerCharacter"></div>
     <button type="button" class="nav-orb" id="navOrbRight" aria-label="Next screen">&rarr;</button>
   </div>
+  <p class="asset-placeholder-note" aria-hidden="true">Rabbit placeholder graphic by CursedLake on itch.io</p>
 
   <script>
     const worldContainer = document.getElementById("worldContainer");
